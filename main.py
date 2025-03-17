@@ -1,0 +1,1 @@
+git@github.com:AnatoliiBessmertnyi/finance_tracker.git
