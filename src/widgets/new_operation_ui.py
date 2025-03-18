@@ -19,7 +19,6 @@ from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QCombo
     QDateTimeEdit, QDialog, QFrame, QLabel,
     QLineEdit, QPushButton, QSizePolicy, QVBoxLayout,
     QWidget)
-from src.icon import res_rc
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -71,18 +70,18 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.category_cb)
 
-        self.data = QDateTimeEdit(self.operation_frame)
-        self.data.setObjectName(u"data")
-        self.data.setStyleSheet(u"font-size: 14px;\n"
+        self.date = QDateTimeEdit(self.operation_frame)
+        self.date.setObjectName(u"date")
+        self.date.setStyleSheet(u"font-size: 14px;\n"
 "color: #c8fafa;\n"
 "padding-left: 8px;;\n"
 "\n"
 "\n"
 "")
-        self.data.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
-        self.data.setDate(QDate(2025, 1, 1))
+        self.date.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        self.date.setDate(QDate(2025, 1, 1))
 
-        self.verticalLayout.addWidget(self.data)
+        self.verticalLayout.addWidget(self.date)
 
         self.description_le = QLineEdit(self.operation_frame)
         self.description_le.setObjectName(u"description_le")

@@ -17,14 +17,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
     QLabel, QMainWindow, QPushButton, QSizePolicy,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
-from src.icon import resources
+    QTableView, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(623, 600)
+        MainWindow.resize(728, 600)
         MainWindow.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0, y2:0, stop:0 rgba(0, 102, 102, 255), stop:1 rgba(0, 191, 255, 255));\n"
 "font-family: Roboto;")
         self.main_widget = QWidget(MainWindow)
@@ -431,7 +430,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addLayout(self.buttons_container)
 
-        self.table_container = QTableWidget(self.main_widget)
+        self.table_container = QTableView(self.main_widget)
         self.table_container.setObjectName(u"table_container")
         self.table_container.setStyleSheet(u"QTableView {\n"
 "background-color: rgba(255, 255, 255, 30);\n"
@@ -457,9 +456,6 @@ class Ui_MainWindow(object):
 "color: #E0F7FA;\n"
 "background-color: rgba(255, 255, 255, 50);\n"
 "}")
-        self.table_container.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.table_container.setShowGrid(False)
-        self.table_container.horizontalHeader().setDefaultSectionSize(135)
 
         self.verticalLayout_3.addWidget(self.table_container)
 

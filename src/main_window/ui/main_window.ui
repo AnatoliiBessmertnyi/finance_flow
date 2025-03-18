@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>623</width>
+    <width>728</width>
     <height>600</height>
    </rect>
   </property>
@@ -98,7 +98,7 @@ padding-top: 10px;</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/arrow_insert.svg</pixmap>
+              <pixmap>:/icons/arrow_insert.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -157,7 +157,7 @@ border: none;</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/call_received.svg</pixmap>
+              <pixmap>:/icons/call_received.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -254,7 +254,7 @@ border: none;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/shopping_cart.svg</pixmap>
+              <pixmap>:/icons/shopping_cart.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -311,7 +311,7 @@ border: none;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/cloud.svg</pixmap>
+              <pixmap>:/icons/cloud.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -368,7 +368,7 @@ border: none;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/bus.svg</pixmap>
+              <pixmap>:/icons/bus.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -425,7 +425,7 @@ border: none;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/sports.svg</pixmap>
+              <pixmap>:/icons/sports.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -482,7 +482,7 @@ border: none;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icon/res-rc.qrc">:/icons/more.svg</pixmap>
+              <pixmap>:/icons/more.svg</pixmap>
              </property>
             </widget>
            </item>
@@ -548,7 +548,7 @@ background-color: rgba(255, 255, 255, 70);
          <string>Новая операция</string>
         </property>
         <property name="icon">
-         <iconset resource="icon/res-rc.qrc">
+         <iconset>
           <normaloff>:/icons/add.svg</normaloff>:/icons/add.svg</iconset>
         </property>
         <property name="iconSize">
@@ -583,7 +583,7 @@ background-color: rgba(255, 255, 255, 70);
          <string>Редактировать операцию</string>
         </property>
         <property name="icon">
-         <iconset resource="icon/res-rc.qrc">
+         <iconset>
           <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
         </property>
         <property name="iconSize">
@@ -618,7 +618,7 @@ background-color: rgba(255, 255, 255, 70);
          <string>Удалить операцию</string>
         </property>
         <property name="icon">
-         <iconset resource="icon/res-rc.qrc">
+         <iconset>
           <normaloff>:/icons/delete.svg</normaloff>:/icons/delete.svg</iconset>
         </property>
         <property name="iconSize">
@@ -632,7 +632,7 @@ background-color: rgba(255, 255, 255, 70);
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="table_container">
+     <widget class="QTableView" name="table_container">
       <property name="styleSheet">
        <string notr="true">QTableView {
 background-color: rgba(255, 255, 255, 30);
@@ -659,22 +659,11 @@ color: #E0F7FA;
 background-color: rgba(255, 255, 255, 50);
 }</string>
       </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="showGrid">
-       <bool>false</bool>
-      </property>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>135</number>
-      </attribute>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="icon/res-rc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
