@@ -456,6 +456,8 @@ class Ui_MainWindow(object):
 "color: #E0F7FA;\n"
 "background-color: rgba(255, 255, 255, 50);\n"
 "}")
+        self.table_container.setShowGrid(False)
+        self.table_container.setSortingEnabled(True)
 
         self.verticalLayout_3.addWidget(self.table_container)
 
