@@ -16,6 +16,7 @@ class OperationTracker(QMainWindow):
         self.ui.setupUi(self)
         self.conn = Data()
         self.view_data()
+        self.reload_data()
 
         self.ui.new_btn.clicked.connect(self.open_new_operation_window)
         self.ui.edit_btn.clicked.connect(self.open_new_operation_window)
@@ -26,6 +27,16 @@ class OperationTracker(QMainWindow):
         self.model.setTable('finances')
         self.model.select()
         self.ui.table_container.setModel(self.model)
+
+    def reload_data(self):
+        self.ui.balance_lbl.setText(self.conn.total_balance())
+        self.ui.income_balance_lbl.setText(self.conn.total_income())
+        self.ui.outcome_balance_lbl.setText(self.conn.total_outcome())
+        self.ui.groceries_balance.setText(self.conn.total_groceries())
+        self.ui.marketplace_balance.setText(self.conn.total_marketplace())
+        self.ui.transport_balance.setText(self.conn.total_transport())
+        self.ui.entertainment_balance.setText(self.conn.total_entertainment())
+        self.ui.other_balance.setText(self.conn.total_other())
 
     def open_new_operation_window(self):
         self.new_window = QtWidgets.QDialog()
@@ -44,12 +55,13 @@ class OperationTracker(QMainWindow):
         date = self.ui_window.date.text()
         category = self.ui_window.category_cb.currentText()
         description = self.ui_window.description_le.text()
-        balance = self.ui_window.balance_le.text()
-        status = self.ui_window.status_cb.currentText()
+        balance = self.ui_window.amount_le.text()
+        status = self.ui_window.operation_type_cb.currentText()
 
         self.conn.add_new_operation_query(
             date, category, description, balance, status
         )
+        self.reload_data()
         self.view_data()
         self.new_window.close()
 
@@ -59,12 +71,13 @@ class OperationTracker(QMainWindow):
         date = self.ui_window.date.text()
         category = self.ui_window.category_cb.currentText()
         description = self.ui_window.description_le.text()
-        balance = self.ui_window.balance_le.text()
-        status = self.ui_window.status_cb.currentText()
+        balance = self.ui_window.amount_le.text()
+        status = self.ui_window.operation_type_cb.currentText()
 
         self.conn.update_operation_query(
             date, category, description, balance, status, id
         )
+        self.reload_data()
         self.view_data()
         self.new_window.close()
 
@@ -73,6 +86,7 @@ class OperationTracker(QMainWindow):
         id = str(self.ui.table_container.model().data(index))
 
         self.conn.delete_operation_query(id)
+        self.reload_data()
         self.view_data()
 
 

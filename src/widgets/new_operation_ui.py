@@ -91,13 +91,13 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.description_le)
 
-        self.amount_lbl = QLineEdit(self.operation_frame)
-        self.amount_lbl.setObjectName(u"amount_lbl")
-        self.amount_lbl.setStyleSheet(u"font-size: 14px;\n"
+        self.amount_le = QLineEdit(self.operation_frame)
+        self.amount_le.setObjectName(u"amount_le")
+        self.amount_le.setStyleSheet(u"font-size: 14px;\n"
 "color: #c8fafa;\n"
 "padding-left: 8px;")
 
-        self.verticalLayout.addWidget(self.amount_lbl)
+        self.verticalLayout.addWidget(self.amount_le)
 
         self.operation_type_cb = QComboBox(self.operation_frame)
         self.operation_type_cb.addItem("")
@@ -172,7 +172,7 @@ class Ui_Dialog(object):
 
         self.category_cb.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044e", None))
         self.description_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435", None))
-        self.amount_lbl.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u043c\u043c\u0430", None))
+        self.amount_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u043c\u043c\u0430", None))
         self.operation_type_cb.setItemText(0, QCoreApplication.translate("Dialog", u"\u0414\u043e\u0445\u043e\u0434", None))
         self.operation_type_cb.setItemText(1, QCoreApplication.translate("Dialog", u"\u0417\u0430\u0442\u0440\u0430\u0442\u044b", None))
 

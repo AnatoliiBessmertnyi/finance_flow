@@ -98,7 +98,7 @@ padding-left: 8px;
        </widget>
       </item>
       <item>
-       <widget class="QDateTimeEdit" name="data">
+       <widget class="QDateTimeEdit" name="date">
         <property name="styleSheet">
          <string notr="true">font-size: 14px;
 color: #c8fafa;
@@ -132,7 +132,7 @@ padding-left: 8px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="amount_lbl">
+       <widget class="QLineEdit" name="amount_le">
         <property name="styleSheet">
          <string notr="true">font-size: 14px;
 color: #c8fafa;
