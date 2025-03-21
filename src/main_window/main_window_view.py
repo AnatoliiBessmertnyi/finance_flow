@@ -3,7 +3,7 @@ import os
 
 from PySide6 import QtWidgets
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
 from src.main_window.ui.main_window_ui import Ui_MainWindow
 
@@ -23,6 +23,19 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
             '../img',
             'main_icon.ico'
         )
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('myappid')
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+            'myappid'
+        )
         app_icon = QIcon(icon_path)
         app.setWindowIcon(app_icon)
+
+    def show_message(
+        self, title: str, message: str, message_type: str = 'info'
+    ):
+        """Показывает сообщение (ошибка, предупреждение, информация)."""
+        if message_type == 'error':
+            QMessageBox.critical(self, title, message)
+        elif message_type == 'warning':
+            QMessageBox.warning(self, title, message)
+        elif message_type == 'info':
+            QMessageBox.information(self, title, message)

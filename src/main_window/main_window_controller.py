@@ -18,8 +18,8 @@ class MainWindowController(QMainWindow):
         self.load_operations()
         self.reload_data()
 
-        self.view.new_btn.clicked.connect(self.open_new_operation_window)
-        self.view.edit_btn.clicked.connect(self.open_edit_operation_window)
+        self.view.new_btn.clicked.connect(self.open_operation_window)
+        self.view.edit_btn.clicked.connect(self.open_operation_window)
         self.view.delete_btn.clicked.connect(self.delete_operation)
 
     def load_operations(self):
@@ -42,31 +42,27 @@ class MainWindowController(QMainWindow):
         )
         self.view.other_balance.setText(self.handler.total_other())
 
-    def open_new_operation_window(self):
+    def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
-        print(self.sender())
+        operation_id = None
+        sender = self.sender()
+        mode = 'new' if sender.objectName() == 'new_btn' else 'edit'
+
+        if mode == 'edit':
+            selected_index = self.view.table_container.selectedIndexes()
+            if not selected_index:
+                self.view.show_message(
+                    'Ошибка',
+                    'Выберите операцию для редактирования.',
+                    'error'
+                )
+                return
+            operation_id = self.model.data(selected_index[0])
+
         self.operations_view = OperationsView()
         self.operations_handler = OperationsHandler(self.handler)
         self.operations_controller = OperationsController(
-            self.operations_view, self.operations_handler, mode='new'
-        )
-        self.operations_controller.exec()
-        self.load_operations()
-        self.reload_data()
-
-    def open_edit_operation_window(self):
-        """Открывает окно для редактирования выбранной операции."""
-        selected_index = self.view.table_container.selectedIndexes()[0]
-        operation_id = self.model.data(selected_index)
-        print(self.sender())
-
-        self.operations_view = OperationsView()
-        self.operations_handler = OperationsHandler(self.handler)
-        self.operations_controller = OperationsController(
-            self.operations_view,
-            self.operations_handler,
-            mode='edit',
-            operation_id=operation_id
+            self.operations_view, self.operations_handler, mode, operation_id
         )
         self.operations_controller.exec()
         self.load_operations()
