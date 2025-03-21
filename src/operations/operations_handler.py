@@ -29,3 +29,19 @@ class OperationsHandler:
         """Удаляет операцию по ID."""
         query = 'DELETE FROM finances WHERE ID=?'
         self.db_handler.execute_query(query, [operation_id])
+
+    def get_operation_by_id(self, operation_id):
+        """Возвращает данные операции по ID."""
+        query = self.db_handler.execute_query(
+            'SELECT * FROM finances WHERE ID = ?', [operation_id]
+        )
+        if query.next():
+            return {
+                'id': query.value('ID'),
+                'date': query.value('Date'),
+                'category': query.value('Category'),
+                'description': query.value('Description'),
+                'balance': query.value('Balance'),
+                'status': query.value('Status')
+            }
+        return None

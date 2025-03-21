@@ -1,6 +1,8 @@
+from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import QDialog
-from src.operations.operations_view import OperationsView
+
 from src.operations.operations_handler import OperationsHandler
+from src.operations.operations_view import OperationsView
 
 
 class OperationsController(QDialog):
@@ -25,7 +27,16 @@ class OperationsController(QDialog):
 
     def load_operation_data(self):
         """Загружает данные операции для редактирования."""
-        pass
+        operation_data = self.handler.get_operation_by_id(self.operation_id)
+        if operation_data:
+            date_time = QDateTime.fromString(
+                operation_data['date'], 'dd.MM.yyyy HH:mm'
+            )
+            self.view.date.setDateTime(date_time)
+            self.view.category_cb.setCurrentText(operation_data['category'])
+            self.view.description_le.setText(operation_data['description'])
+            self.view.amount_le.setText(str(operation_data['balance']))
+            self.view.operation_type_cb.setCurrentText(operation_data['status'])
 
     def save_operation(self):
         """Сохраняет новую или отредактированную операцию."""
