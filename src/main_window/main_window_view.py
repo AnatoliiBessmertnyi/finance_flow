@@ -1,9 +1,9 @@
 import ctypes
 import os
 
-from PySide6 import QtWidgets
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import (QApplication, QMainWindow, QMessageBox,
+                               QTableView)
 
 from src.main_window.ui.main_window_ui import Ui_MainWindow
 
@@ -12,6 +12,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.table_container.setSelectionBehavior(QTableView.SelectRows)
+        self.table_container.verticalHeader().setVisible(False)
 
     def set_icon(self, app: QApplication) -> None:
         """Установка иконки

@@ -29,6 +29,7 @@ class MainWindowController(QMainWindow):
         self.model.setTable('finances')
         self.model.select()
         self.view.table_container.setModel(self.model)
+        self.view.table_container.hideColumn(0)
 
     def reload_data(self):
         self.view.balance_lbl.setText(self.handler.total_balance())
@@ -57,7 +58,8 @@ class MainWindowController(QMainWindow):
                     'error'
                 )
                 return
-            operation_id = self.model.data(selected_index[0])
+            selected_row = selected_index[0].row()
+            operation_id = self.model.data(self.model.index(selected_row, 0))
 
         self.operations_view = OperationsView()
         self.operations_handler = OperationsHandler(self.handler)
