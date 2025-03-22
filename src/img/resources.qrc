@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>cloud.svg</file>
+    <file>bus.svg</file>
+    <file>lan.svg</file>
+    <file>add.svg</file>
+    <file>arrow_insert.svg</file>
+    <file>call_received.svg</file>
+    <file>car.svg</file>
+    <file>delete.svg</file>
+    <file>edit.svg</file>
+    <file>fastfood.svg</file>
+    <file>health.svg</file>
+    <file>home.svg</file>
+    <file>more.svg</file>
+    <file>shopping_cart.svg</file>
+    <file>sports.svg</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>new_operation</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0, y2:0, stop:0 rgba(0, 102, 102, 255), stop:1 rgba(0, 191, 255, 255));
+font-family: Roboto;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="operation_frame">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="title_lbl">
+        <property name="styleSheet">
+         <string notr="true">color: #c8fafa;
+font-weight: bold;
+font-size: 18px;
+background-color: none;
+border: none;
+</string>
+        </property>
+        <property name="text">
+         <string>Новая операция</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="category_cb">
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+font-size: 14px;
+color: #c8fafa;
+padding-left: 8px;
+}
+
+QComboBox:item {
+color: #c8fafa;;
+padding-left: 8px;
+}</string>
+        </property>
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+        <property name="placeholderText">
+         <string>Выберите категорию</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Продукты</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Маркетплейсы</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Транспорт</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Развлечения</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Другое</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateTimeEdit" name="date">
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px;
+color: #c8fafa;
+padding-left: 8px;;
+
+
+</string>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+        </property>
+        <property name="date">
+         <date>
+          <year>2025</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="description_le">
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px;
+color: #c8fafa;
+padding-left: 8px;</string>
+        </property>
+        <property name="placeholderText">
+         <string>Описание</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="amount_le">
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px;
+color: #c8fafa;
+padding-left: 8px;</string>
+        </property>
+        <property name="placeholderText">
+         <string>Сумма</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="operation_type_cb">
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+font-size: 14px;
+color: #c8fafa;
+padding-left: 8px;
+}
+
+QComboBox:item {
+color: white;
+padding-left: 8px;
+}</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Доход</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Затраты</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="reload_cb">
+        <property name="styleSheet">
+         <string notr="true">font-size: 14px;
+color: #c8fafa;
+padding-left: 10px;</string>
+        </property>
+        <property name="text">
+         <string>Ежемесячная операция</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+color: #c8fafa;
+background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;
+width: 230px;
+height: 50px;
+}
+QPushButton:hover {
+background-color: rgba(255, 255, 255, 40);
+}
+QPushButton:pressed {
+background-color: rgba(255, 255, 255, 70);
+}
+
+</string>
+        </property>
+        <property name="text">
+         <string>Добавить операцию</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/add.svg</normaloff>:/icons/add.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
