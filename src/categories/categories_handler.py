@@ -37,7 +37,6 @@ class CategoriesHandler:
 
     def category_exists(self, name: str) -> bool:
         """Проверяет, существует ли категория с таким именем."""
-        print('unique')
         query = QtSql.QSqlQuery(self.db)
         query.prepare('SELECT COUNT(*) FROM categories WHERE Name = ?')
         query.addBindValue(name)

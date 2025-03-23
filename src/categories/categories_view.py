@@ -1,4 +1,3 @@
-from PySide6.QtCore import Qt,  Signal
 from PySide6.QtWidgets import (QDialog, QHeaderView, QMessageBox,
                                QTableWidgetItem)
 
@@ -6,13 +5,9 @@ from src.categories.ui.categories_ui import Ui_Dialog
 
 
 class CategoriesView(QDialog, Ui_Dialog):
-    category_updated = Signal(str, str)
-
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        self.old_name = ""
 
         self.table_container.setColumnCount(1)
         self.table_container.setHorizontalHeaderLabels(["Категория"])
@@ -20,10 +15,6 @@ class CategoriesView(QDialog, Ui_Dialog):
         self.table_container.horizontalHeader().setVisible(False)
         self.table_container.horizontalHeader().setSectionResizeMode(
             QHeaderView.Stretch
-        )
-        self.table_container.cellChanged.connect(self.on_cell_changed)
-        self.table_container.cellDoubleClicked.connect(
-            self.on_cell_double_clicked
         )
 
     def add_category_to_table(self, name: str):
@@ -59,16 +50,3 @@ class CategoriesView(QDialog, Ui_Dialog):
             category_item = self.table_container.item(selected_row, 0)
             return category_item.text()
         return ""
-
-    def on_cell_double_clicked(self, row: int, column: int):
-        """Сохраняет старое значение перед редактированием."""
-        self.old_name = self.table_container.item(row, 0).text()
-        print(f"Старое значение (до редактирования): {self.old_name}")
-
-    def on_cell_changed(self, row: int, column: int):
-        """Обрабатывает изменение ячейки."""
-        new_name = self.table_container.item(row, column).text().strip()
-        print(new_name, 'new_name')
-
-        if new_name and new_name != self.old_name:
-            self.category_updated.emit(self.old_name, new_name)

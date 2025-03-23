@@ -11,6 +11,8 @@ class CategoriesController:
         self.handler = handler
         self.view.controller = self
 
+        self.old_name = ''
+
         self.load_categories()
         self.connect_signals()
 
@@ -18,7 +20,10 @@ class CategoriesController:
         """Подключение сигналов к слотам."""
         self.view.new_btn.clicked.connect(self.on_add_category)
         self.view.delete_btn.clicked.connect(self.on_delete_category)
-        self.view.category_updated.connect(self.on_category_updated)
+        self.view.table_container.cellChanged.connect(self.on_cell_changed)
+        self.view.table_container.cellDoubleClicked.connect(
+            self.on_cell_double_clicked
+        )
 
     def load_categories(self):
         """Загружает категории из базы данных и отображает их в таблице."""
@@ -50,12 +55,22 @@ class CategoriesController:
         else:
             self.view.show_error("Не выбрана категория для удаления.")
 
+    def on_cell_double_clicked(self, row: int, _):
+        """Сохраняет старое значение перед редактированием."""
+        self.old_name = self.view.table_container.item(row, 0).text()
+
+    def on_cell_changed(self, row: int, column: int):
+        """Обрабатывает изменение ячейки."""
+        new_name = self.view.table_container.item(row, column).text().strip()
+
+        if new_name and new_name != self.old_name:
+            self.on_category_updated(self.old_name, new_name)
+
     def on_category_updated(self, old_name: str, new_name: str):
         """Обновляет название категории в базе данных."""
-        print('on_category_updated')
         if self.handler.category_exists(new_name):
             self.view.show_error("Категория с таким именем уже существует.")
-            self.load_categories()
+            self.restore_old_name()
             return
 
         if self.handler.update_category(old_name, new_name):
@@ -63,3 +78,11 @@ class CategoriesController:
         else:
             self.view.show_error("Ошибка при обновлении категории.")
             self.load_categories()
+
+    def restore_old_name(self):
+        """Восстанавливает старое значение в таблице."""
+        selected_row = self.view.table_container.currentRow()
+        if selected_row >= 0:
+            item = self.view.table_container.item(selected_row, 0)
+            if item:
+                item.setText(self.old_name)
