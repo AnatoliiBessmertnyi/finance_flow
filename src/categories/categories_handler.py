@@ -34,3 +34,33 @@ class CategoriesHandler:
             print("Ошибка при удалении категории:", query.lastError().text())
             return False
         return True
+
+    def category_exists(self, name: str) -> bool:
+        """Проверяет, существует ли категория с таким именем."""
+        print('unique')
+        query = QtSql.QSqlQuery(self.db)
+        query.prepare('SELECT COUNT(*) FROM categories WHERE Name = ?')
+        query.addBindValue(name)
+
+        if query.exec() and query.next():
+            return query.value(0) > 0
+        return False
+
+    def get_category_count(self) -> int:
+        """Возвращает количество категорий в базе данных."""
+        query = QtSql.QSqlQuery('SELECT COUNT(*) FROM categories', self.db)
+        if query.exec() and query.next():
+            return query.value(0)
+        return 0
+
+    def update_category(self, old_name: str, new_name: str) -> bool:
+        """Обновляет название категории в базе данных."""
+        query = QtSql.QSqlQuery(self.db)
+        query.prepare('UPDATE categories SET Name = ? WHERE Name = ?')
+        query.addBindValue(new_name)
+        query.addBindValue(old_name)
+
+        if not query.exec():
+            print("Ошибка при обновлении категории:", query.lastError().text())
+            return False
+        return True
