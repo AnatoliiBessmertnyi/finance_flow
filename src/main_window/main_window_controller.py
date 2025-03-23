@@ -1,14 +1,18 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import QMainWindow
 
-from src.main_window.main_window_handler import MainWindowHandler
-from src.main_window.main_window_view import MainWindowView
-from src.operations.operations_controller import OperationsController
-from src.operations.operations_handler import OperationsHandler
-from src.operations.operations_view import OperationsView
 from src.categories.categories_controller import CategoriesController
 from src.categories.categories_handler import CategoriesHandler
 from src.categories.categories_view import CategoriesView
+from src.operations.operations_controller import OperationsController
+from src.operations.operations_handler import OperationsHandler
+from src.operations.operations_view import OperationsView
+
+if TYPE_CHECKING:
+    from src.main_window.main_window_handler import MainWindowHandler
+    from src.main_window.main_window_view import MainWindowView
 
 
 class MainWindowController(QMainWindow):
@@ -77,8 +81,8 @@ class MainWindowController(QMainWindow):
 
     def open_categories(self):
         self.categories_view = CategoriesView()
-        self.categories_handler = CategoriesHandler()
+        self.categories_handler = CategoriesHandler(self.handler)
         self.categories_controller = CategoriesController(
             self.categories_view, self.categories_handler
         )
-        self.categories_controller.exec()
+        self.categories_view.exec()

@@ -17,7 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDialog, QFrame, QHBoxLayout,
     QHeaderView, QLabel, QPushButton, QSizePolicy,
-    QTableView, QTextEdit, QVBoxLayout, QWidget)
+    QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout,
+    QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -58,7 +59,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.category_name_te)
 
-        self.table_container = QTableView(self.operation_frame)
+        self.table_container = QTableWidget(self.operation_frame)
         self.table_container.setObjectName(u"table_container")
         self.table_container.setStyleSheet(u"QTableView {\n"
 "background-color: rgba(255, 255, 255, 30);\n"

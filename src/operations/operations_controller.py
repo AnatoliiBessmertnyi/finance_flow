@@ -1,8 +1,11 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import QDialog
 
-from src.operations.operations_handler import OperationsHandler
-from src.operations.operations_view import OperationsView
+if TYPE_CHECKING:
+    from src.operations.operations_handler import OperationsHandler
+    from src.operations.operations_view import OperationsView
 
 
 class OperationsController(QDialog):
@@ -15,7 +18,6 @@ class OperationsController(QDialog):
     ):
         super().__init__()
         self.view = view
-        self.view.setupUi(self)
         self.handler = handler
         self.mode = mode
         self.operation_id = operation_id
