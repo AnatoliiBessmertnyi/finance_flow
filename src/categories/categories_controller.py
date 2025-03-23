@@ -42,9 +42,15 @@ class CategoriesController:
                 self.view.show_error("Достигнут лимит категорий (10 штук).")
                 return
 
+            self.view.table_container.cellChanged.disconnect(
+                self.on_cell_changed
+            )
+
             if self.handler.add_category(category_name):
                 self.view.add_category_to_table(category_name)
                 self.view.clear_input()
+
+            self.view.table_container.cellChanged.connect(self.on_cell_changed)
 
     def on_delete_category(self):
         """Обрабатывает нажатие кнопки удаления категории."""
@@ -58,7 +64,6 @@ class CategoriesController:
                 self.view.table_container.removeRow(selected_row)
         else:
             self.view.show_error("Не выбрана категория для удаления.")
-
 
     def on_cell_double_clicked(self, row: int, _):
         """Сохраняет старое значение перед редактированием."""
