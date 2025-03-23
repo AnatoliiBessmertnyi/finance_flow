@@ -6,6 +6,9 @@ from src.main_window.main_window_view import MainWindowView
 from src.operations.operations_controller import OperationsController
 from src.operations.operations_handler import OperationsHandler
 from src.operations.operations_view import OperationsView
+from src.categories.categories_controller import CategoriesController
+from src.categories.categories_handler import CategoriesHandler
+from src.categories.categories_view import CategoriesView
 
 
 class MainWindowController(QMainWindow):
@@ -21,6 +24,7 @@ class MainWindowController(QMainWindow):
         self.view.new_btn.clicked.connect(self.open_operation_window)
         self.view.edit_btn.clicked.connect(self.open_operation_window)
         self.view.delete_btn.clicked.connect(self.delete_operation)
+        self.view.category_edit_btn.clicked.connect(self.open_categories)
 
     def load_operations(self):
         """Загружает операции из базы данных и отображает их в таблице."""
@@ -35,13 +39,6 @@ class MainWindowController(QMainWindow):
         self.view.balance_lbl.setText(self.handler.total_balance())
         self.view.income_balance_lbl.setText(self.handler.total_income())
         self.view.outcome_balance_lbl.setText(self.handler.total_outcome())
-        self.view.groceries_balance.setText(self.handler.total_groceries())
-        self.view.marketplace_balance.setText(self.handler.total_marketplace())
-        self.view.transport_balance.setText(self.handler.total_transport())
-        self.view.entertainment_balance.setText(
-            self.handler.total_entertainment()
-        )
-        self.view.other_balance.setText(self.handler.total_other())
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
@@ -77,3 +74,11 @@ class MainWindowController(QMainWindow):
         self.new_operation_handler.delete_operation(operation_id)
         self.load_operations()
         self.reload_data()
+
+    def open_categories(self):
+        self.categories_view = CategoriesView()
+        self.categories_handler = CategoriesHandler()
+        self.categories_controller = CategoriesController(
+            self.categories_view, self.categories_handler
+        )
+        self.categories_controller.exec()

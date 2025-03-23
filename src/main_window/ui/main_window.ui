@@ -218,304 +218,63 @@ border-radius: 6px;</string>
           <number>8</number>
          </property>
          <item>
-          <widget class="QLabel" name="category_title_lbl">
-           <property name="styleSheet">
-            <string notr="true">color: #c8fafa;
+          <layout class="QHBoxLayout" name="title_container">
+           <item>
+            <widget class="QLabel" name="category_title_lbl">
+             <property name="styleSheet">
+              <string notr="true">color: #c8fafa;
 font-weight: bold;
 font-size: 18px;
 background-color: none;
 border: none;
 </string>
-           </property>
-           <property name="text">
-            <string>Категории</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="groceries_container">
-           <property name="spacing">
-            <number>0</number>
-           </property>
+             </property>
+             <property name="text">
+              <string>Категории</string>
+             </property>
+            </widget>
+           </item>
            <item>
-            <widget class="QLabel" name="groceries_icon">
+            <widget class="QPushButton" name="category_edit_btn">
+             <property name="minimumSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>24</width>
-               <height>16777215</height>
+               <height>24</height>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/shopping_cart.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="groceries_lbl">
-             <property name="styleSheet">
               <string notr="true">color: #c8fafa;
-font-weight: bold;
-font-size: 14px;
+width: 230px;
+height: 50px;
 background-color: none;
 border: none;
 </string>
              </property>
              <property name="text">
-              <string>Продукты</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="groceries_balance">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>1000</string>
+              <string>Edit</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="marketplace_container">
-           <property name="spacing">
-            <number>0</number>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
-           <item>
-            <widget class="QLabel" name="marketplace_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/cloud.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="marketplace_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-weight: bold;
-font-size: 14px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>Маркетплейсы</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="marketplace_balance">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>1000</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="transport_container">
-           <property name="spacing">
-            <number>0</number>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
-           <item>
-            <widget class="QLabel" name="transport_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/bus.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="transport_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-weight: bold;
-font-size: 14px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>Транспорт</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="transport_balance">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>1000</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="entertainment_container">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="entertainment_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/sports.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="entertainment_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-weight: bold;
-font-size: 14px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>Развлечения</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="entertainment_balance">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>1000</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="other_container">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="other_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/more.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="other_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-weight: bold;
-font-size: 14px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>Другое</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="other_balance">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-</string>
-             </property>
-             <property name="text">
-              <string>1000</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          </spacer>
          </item>
         </layout>
        </widget>
@@ -658,6 +417,9 @@ border: none;
 color: #E0F7FA;
 background-color: rgba(255, 255, 255, 50);
 }</string>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
       </property>
       <property name="showGrid">
        <bool>false</bool>

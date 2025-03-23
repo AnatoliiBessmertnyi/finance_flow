@@ -51,11 +51,6 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.title_lbl)
 
         self.category_cb = QComboBox(self.operation_frame)
-        self.category_cb.addItem("")
-        self.category_cb.addItem("")
-        self.category_cb.addItem("")
-        self.category_cb.addItem("")
-        self.category_cb.addItem("")
         self.category_cb.setObjectName(u"category_cb")
         self.category_cb.setStyleSheet(u"QComboBox {\n"
 "font-size: 14px;\n"
@@ -142,9 +137,6 @@ class Ui_Dialog(object):
 "}\n"
 "\n"
 "")
-        icon = QIcon()
-        icon.addFile(u":/icons/add.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(QSize(24, 24))
 
         self.verticalLayout.addWidget(self.pushButton)
@@ -164,12 +156,6 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"new_operation", None))
         self.title_lbl.setText(QCoreApplication.translate("Dialog", u"\u041d\u043e\u0432\u0430\u044f \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044f", None))
-        self.category_cb.setItemText(0, QCoreApplication.translate("Dialog", u"\u041f\u0440\u043e\u0434\u0443\u043a\u0442\u044b", None))
-        self.category_cb.setItemText(1, QCoreApplication.translate("Dialog", u"\u041c\u0430\u0440\u043a\u0435\u0442\u043f\u043b\u0435\u0439\u0441\u044b", None))
-        self.category_cb.setItemText(2, QCoreApplication.translate("Dialog", u"\u0422\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442", None))
-        self.category_cb.setItemText(3, QCoreApplication.translate("Dialog", u"\u0420\u0430\u0437\u0432\u043b\u0435\u0447\u0435\u043d\u0438\u044f", None))
-        self.category_cb.setItemText(4, QCoreApplication.translate("Dialog", u"\u0414\u0440\u0443\u0433\u043e\u0435", None))
-
         self.category_cb.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044e", None))
         self.description_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435", None))
         self.amount_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u043c\u043c\u0430", None))

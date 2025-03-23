@@ -70,31 +70,6 @@ padding-left: 8px;
         <property name="placeholderText">
          <string>Выберите категорию</string>
         </property>
-        <item>
-         <property name="text">
-          <string>Продукты</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Маркетплейсы</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Транспорт</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Развлечения</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Другое</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
@@ -203,10 +178,6 @@ background-color: rgba(255, 255, 255, 70);
         </property>
         <property name="text">
          <string>Добавить операцию</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/add.svg</normaloff>:/icons/add.svg</iconset>
         </property>
         <property name="iconSize">
          <size>

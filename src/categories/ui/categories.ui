@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>348</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>new_operation</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0, y2:0, stop:0 rgba(0, 102, 102, 255), stop:1 rgba(0, 191, 255, 255));
+font-family: Roboto;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="operation_frame">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="title_lbl">
+        <property name="styleSheet">
+         <string notr="true">color: #c8fafa;
+font-weight: bold;
+font-size: 18px;
+background-color: none;
+border: none;
+</string>
+        </property>
+        <property name="text">
+         <string>Новая категория</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="category_name_te">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>28</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>28</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #c8fafa;
+font-size: 14px;</string>
+        </property>
+        <property name="placeholderText">
+         <string>Введите имя категории</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableView" name="table_container">
+        <property name="styleSheet">
+         <string notr="true">QTableView {
+background-color: rgba(255, 255, 255, 30);
+border: 1px solid  rgba(255, 255, 255, 40);
+border-bottom-left-radius: 6px;
+border-bottom-right-radius: 6px;
+}
+QTableView::section {
+background-color: rgb(53, 53, 53);
+color: #c8fafa;
+border: none;
+height: 50px;
+font-size: 14px;
+}
+
+QTableView::item {
+border-style: none;
+border-bottom:  rgba(255, 255, 255, 50);
+}
+
+QTableView::item:selected {
+border: none;
+color: #E0F7FA;
+background-color: rgba(255, 255, 255, 50);
+}</string>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="buttons_container">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="new_btn">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+color: #c8fafa;
+background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;
+width: 230px;
+height: 50px;
+}
+QPushButton:hover {
+background-color: rgba(255, 255, 255, 40);
+}
+QPushButton:pressed {
+background-color: rgba(255, 255, 255, 70);
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Добавить</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="edit_btn">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+color: #c8fafa;
+background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;
+width: 230px;
+height: 50px;
+}
+QPushButton:hover {
+background-color: rgba(255, 255, 255, 40);
+}
+QPushButton:pressed {
+background-color: rgba(255, 255, 255, 70);
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Редактировать</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="delete_btn">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>52</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+color: #c8fafa;
+background-color: rgba(255, 255, 255, 30);
+border: 1px solid rgba(255, 255, 255, 40);
+border-radius: 6px;
+width: 230px;
+height: 50px;
+}
+QPushButton:hover {
+background-color: rgba(255, 255, 255, 40);
+}
+QPushButton:pressed {
+background-color: rgba(255, 255, 255, 70);
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Удалить</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

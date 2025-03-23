@@ -28,6 +28,12 @@ class MainWindowHandler:
                 Status VARCHAR(20)
             )
         ''')
+        query.exec('''
+            CREATE TABLE IF NOT EXISTS categories (
+                ID integer primary key AUTOINCREMENT,
+                Name VARCHAR(20)
+            )
+        ''')
         return True
 
     def execute_query(self, sql_query, params=None):
@@ -80,18 +86,3 @@ class MainWindowHandler:
 
     def total_outcome(self):
         return self.get_total(column='Balance', filter='Status', value='Затраты')
-
-    def total_groceries(self):
-        return self.get_total(column='Balance', filter='Category', value='Продукты')
-
-    def total_marketplace(self):
-        return self.get_total(column='Balance', filter='Category', value='Маркетплейсы')
-
-    def total_transport(self):
-        return self.get_total(column='Balance', filter='Category', value='Транспорт')
-
-    def total_entertainment(self):
-        return self.get_total(column='Balance', filter='Category', value='Развлечения')
-
-    def total_other(self):
-        return self.get_total(column='Balance', filter='Category', value='Другое')

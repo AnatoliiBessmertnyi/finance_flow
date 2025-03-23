@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
     QLabel, QMainWindow, QPushButton, QSizePolicy,
-    QTableView, QVBoxLayout, QWidget)
+    QSpacerItem, QTableView, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -148,6 +148,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(8, 8, 8, 8)
+        self.title_container = QHBoxLayout()
+        self.title_container.setObjectName(u"title_container")
         self.category_title_lbl = QLabel(self.category_frame)
         self.category_title_lbl.setObjectName(u"category_title_lbl")
         self.category_title_lbl.setStyleSheet(u"color: #c8fafa;\n"
@@ -157,192 +159,27 @@ class Ui_MainWindow(object):
 "border: none;\n"
 "")
 
-        self.verticalLayout_2.addWidget(self.category_title_lbl)
+        self.title_container.addWidget(self.category_title_lbl)
 
-        self.groceries_container = QHBoxLayout()
-        self.groceries_container.setSpacing(0)
-        self.groceries_container.setObjectName(u"groceries_container")
-        self.groceries_icon = QLabel(self.category_frame)
-        self.groceries_icon.setObjectName(u"groceries_icon")
-        self.groceries_icon.setMaximumSize(QSize(24, 16777215))
-        self.groceries_icon.setStyleSheet(u"background-color: none;\n"
-"border: none;\n"
-"")
-        self.groceries_icon.setPixmap(QPixmap(u":/icons/shopping_cart.svg"))
-
-        self.groceries_container.addWidget(self.groceries_icon)
-
-        self.groceries_lbl = QLabel(self.category_frame)
-        self.groceries_lbl.setObjectName(u"groceries_lbl")
-        self.groceries_lbl.setStyleSheet(u"color: #c8fafa;\n"
-"font-weight: bold;\n"
-"font-size: 14px;\n"
+        self.category_edit_btn = QPushButton(self.category_frame)
+        self.category_edit_btn.setObjectName(u"category_edit_btn")
+        self.category_edit_btn.setMinimumSize(QSize(24, 24))
+        self.category_edit_btn.setMaximumSize(QSize(24, 24))
+        self.category_edit_btn.setStyleSheet(u"color: #c8fafa;\n"
+"width: 230px;\n"
+"height: 50px;\n"
 "background-color: none;\n"
 "border: none;\n"
 "")
 
-        self.groceries_container.addWidget(self.groceries_lbl)
-
-        self.groceries_balance = QLabel(self.category_frame)
-        self.groceries_balance.setObjectName(u"groceries_balance")
-        self.groceries_balance.setStyleSheet(u"color: #c8fafa;\n"
-"font-size: 16px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.groceries_container.addWidget(self.groceries_balance)
+        self.title_container.addWidget(self.category_edit_btn)
 
 
-        self.verticalLayout_2.addLayout(self.groceries_container)
+        self.verticalLayout_2.addLayout(self.title_container)
 
-        self.marketplace_container = QHBoxLayout()
-        self.marketplace_container.setSpacing(0)
-        self.marketplace_container.setObjectName(u"marketplace_container")
-        self.marketplace_icon = QLabel(self.category_frame)
-        self.marketplace_icon.setObjectName(u"marketplace_icon")
-        self.marketplace_icon.setMaximumSize(QSize(24, 16777215))
-        self.marketplace_icon.setStyleSheet(u"background-color: none;\n"
-"border: none;\n"
-"")
-        self.marketplace_icon.setPixmap(QPixmap(u":/icons/cloud.svg"))
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.marketplace_container.addWidget(self.marketplace_icon)
-
-        self.marketplace_lbl = QLabel(self.category_frame)
-        self.marketplace_lbl.setObjectName(u"marketplace_lbl")
-        self.marketplace_lbl.setStyleSheet(u"color: #c8fafa;\n"
-"font-weight: bold;\n"
-"font-size: 14px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.marketplace_container.addWidget(self.marketplace_lbl)
-
-        self.marketplace_balance = QLabel(self.category_frame)
-        self.marketplace_balance.setObjectName(u"marketplace_balance")
-        self.marketplace_balance.setStyleSheet(u"color: #c8fafa;\n"
-"font-size: 16px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.marketplace_container.addWidget(self.marketplace_balance)
-
-
-        self.verticalLayout_2.addLayout(self.marketplace_container)
-
-        self.transport_container = QHBoxLayout()
-        self.transport_container.setSpacing(0)
-        self.transport_container.setObjectName(u"transport_container")
-        self.transport_icon = QLabel(self.category_frame)
-        self.transport_icon.setObjectName(u"transport_icon")
-        self.transport_icon.setMaximumSize(QSize(24, 16777215))
-        self.transport_icon.setStyleSheet(u"background-color: none;\n"
-"border: none;\n"
-"")
-        self.transport_icon.setPixmap(QPixmap(u":/icons/bus.svg"))
-
-        self.transport_container.addWidget(self.transport_icon)
-
-        self.transport_lbl = QLabel(self.category_frame)
-        self.transport_lbl.setObjectName(u"transport_lbl")
-        self.transport_lbl.setStyleSheet(u"color: #c8fafa;\n"
-"font-weight: bold;\n"
-"font-size: 14px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.transport_container.addWidget(self.transport_lbl)
-
-        self.transport_balance = QLabel(self.category_frame)
-        self.transport_balance.setObjectName(u"transport_balance")
-        self.transport_balance.setStyleSheet(u"color: #c8fafa;\n"
-"font-size: 16px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.transport_container.addWidget(self.transport_balance)
-
-
-        self.verticalLayout_2.addLayout(self.transport_container)
-
-        self.entertainment_container = QHBoxLayout()
-        self.entertainment_container.setSpacing(0)
-        self.entertainment_container.setObjectName(u"entertainment_container")
-        self.entertainment_icon = QLabel(self.category_frame)
-        self.entertainment_icon.setObjectName(u"entertainment_icon")
-        self.entertainment_icon.setMaximumSize(QSize(24, 16777215))
-        self.entertainment_icon.setStyleSheet(u"background-color: none;\n"
-"border: none;\n"
-"")
-        self.entertainment_icon.setPixmap(QPixmap(u":/icons/sports.svg"))
-
-        self.entertainment_container.addWidget(self.entertainment_icon)
-
-        self.entertainment_lbl = QLabel(self.category_frame)
-        self.entertainment_lbl.setObjectName(u"entertainment_lbl")
-        self.entertainment_lbl.setStyleSheet(u"color: #c8fafa;\n"
-"font-weight: bold;\n"
-"font-size: 14px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.entertainment_container.addWidget(self.entertainment_lbl)
-
-        self.entertainment_balance = QLabel(self.category_frame)
-        self.entertainment_balance.setObjectName(u"entertainment_balance")
-        self.entertainment_balance.setStyleSheet(u"color: #c8fafa;\n"
-"font-size: 16px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.entertainment_container.addWidget(self.entertainment_balance)
-
-
-        self.verticalLayout_2.addLayout(self.entertainment_container)
-
-        self.other_container = QHBoxLayout()
-        self.other_container.setSpacing(0)
-        self.other_container.setObjectName(u"other_container")
-        self.other_icon = QLabel(self.category_frame)
-        self.other_icon.setObjectName(u"other_icon")
-        self.other_icon.setMaximumSize(QSize(24, 16777215))
-        self.other_icon.setStyleSheet(u"background-color: none;\n"
-"border: none;\n"
-"")
-        self.other_icon.setPixmap(QPixmap(u":/icons/more.svg"))
-
-        self.other_container.addWidget(self.other_icon)
-
-        self.other_lbl = QLabel(self.category_frame)
-        self.other_lbl.setObjectName(u"other_lbl")
-        self.other_lbl.setStyleSheet(u"color: #c8fafa;\n"
-"font-weight: bold;\n"
-"font-size: 14px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.other_container.addWidget(self.other_lbl)
-
-        self.other_balance = QLabel(self.category_frame)
-        self.other_balance.setObjectName(u"other_balance")
-        self.other_balance.setStyleSheet(u"color: #c8fafa;\n"
-"font-size: 16px;\n"
-"background-color: none;\n"
-"border: none;\n"
-"")
-
-        self.other_container.addWidget(self.other_balance)
-
-
-        self.verticalLayout_2.addLayout(self.other_container)
+        self.verticalLayout_2.addItem(self.verticalSpacer)
 
 
         self.header_container.addWidget(self.category_frame)
@@ -456,6 +293,7 @@ class Ui_MainWindow(object):
 "color: #E0F7FA;\n"
 "background-color: rgba(255, 255, 255, 50);\n"
 "}")
+        self.table_container.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.table_container.setShowGrid(False)
         self.table_container.setSortingEnabled(True)
 
@@ -479,21 +317,7 @@ class Ui_MainWindow(object):
         self.outcome_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0442\u0440\u0430\u0442\u044b", None))
         self.outcome_balance_lbl.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.category_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438", None))
-        self.groceries_icon.setText("")
-        self.groceries_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0434\u0443\u043a\u0442\u044b", None))
-        self.groceries_balance.setText(QCoreApplication.translate("MainWindow", u"1000", None))
-        self.marketplace_icon.setText("")
-        self.marketplace_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041c\u0430\u0440\u043a\u0435\u0442\u043f\u043b\u0435\u0439\u0441\u044b", None))
-        self.marketplace_balance.setText(QCoreApplication.translate("MainWindow", u"1000", None))
-        self.transport_icon.setText("")
-        self.transport_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442", None))
-        self.transport_balance.setText(QCoreApplication.translate("MainWindow", u"1000", None))
-        self.entertainment_icon.setText("")
-        self.entertainment_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0430\u0437\u0432\u043b\u0435\u0447\u0435\u043d\u0438\u044f", None))
-        self.entertainment_balance.setText(QCoreApplication.translate("MainWindow", u"1000", None))
-        self.other_icon.setText("")
-        self.other_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0440\u0443\u0433\u043e\u0435", None))
-        self.other_balance.setText(QCoreApplication.translate("MainWindow", u"1000", None))
+        self.category_edit_btn.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.new_btn.setText(QCoreApplication.translate("MainWindow", u"\u041d\u043e\u0432\u0430\u044f \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044f", None))
         self.edit_btn.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
         self.delete_btn.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
