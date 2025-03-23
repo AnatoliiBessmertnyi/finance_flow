@@ -42,11 +42,3 @@ class CategoriesView(QDialog, Ui_Dialog):
     def get_category_name(self) -> str:
         """Возвращает текст из поля ввода."""
         return self.category_name_te.toPlainText().strip()
-
-    def get_selected_category(self) -> str:
-        """Возвращает выбранную категорию."""
-        selected_row = self.table_container.currentRow()
-        if selected_row >= 0:
-            category_item = self.table_container.item(selected_row, 0)
-            return category_item.text()
-        return ""

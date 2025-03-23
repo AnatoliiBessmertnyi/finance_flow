@@ -48,12 +48,17 @@ class CategoriesController:
 
     def on_delete_category(self):
         """Обрабатывает нажатие кнопки удаления категории."""
-        category_name = self.view.get_selected_category()
-        if category_name:
+        selected_items = self.view.table_container.selectedItems()
+        if selected_items:
+            selected_row = self.view.table_container.currentRow()
+            category_name = (
+                self.view.table_container.item(selected_row, 0).text()
+            )
             if self.handler.delete_category(category_name):
-                self.load_categories()
+                self.view.table_container.removeRow(selected_row)
         else:
             self.view.show_error("Не выбрана категория для удаления.")
+
 
     def on_cell_double_clicked(self, row: int, _):
         """Сохраняет старое значение перед редактированием."""
