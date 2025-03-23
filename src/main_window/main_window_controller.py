@@ -22,6 +22,7 @@ class MainWindowController(QMainWindow):
         self.handler = handler
         self.handler.initialize_database()
 
+        self.initialize_operations()
         self.load_operations()
         self.reload_data()
 
@@ -29,6 +30,10 @@ class MainWindowController(QMainWindow):
         self.view.edit_btn.clicked.connect(self.open_operation_window)
         self.view.delete_btn.clicked.connect(self.delete_operation)
         self.view.category_edit_btn.clicked.connect(self.open_categories)
+
+    def initialize_operations(self):
+        self.operations_view = OperationsView()
+        self.operations_handler = OperationsHandler(self.handler)
 
     def load_operations(self):
         """Загружает операции из базы данных и отображает их в таблице."""
@@ -62,20 +67,26 @@ class MainWindowController(QMainWindow):
             selected_row = selected_index[0].row()
             operation_id = self.model.data(self.model.index(selected_row, 0))
 
-        self.operations_view = OperationsView()
-        self.operations_handler = OperationsHandler(self.handler)
         self.operations_controller = OperationsController(
             self.operations_view, self.operations_handler, mode, operation_id
         )
-        self.operations_controller.exec()
+        self.operations_view.exec()
         self.load_operations()
         self.reload_data()
 
     def delete_operation(self):
         """Удаляет выбранную операцию."""
-        selected_index = self.view.table_container.selectedIndexes()[0]
-        operation_id = self.model.data(selected_index)
-        self.new_operation_handler.delete_operation(operation_id)
+        selected_index = self.view.table_container.selectedIndexes()
+        if not selected_index:
+            self.view.show_message(
+                'Ошибка',
+                'Выберите операцию для удаления.',
+                'error'
+            )
+            return
+        selected_row = selected_index[0].row()
+        operation_id = self.model.data(self.model.index(selected_row, 0))
+        self.operations_handler.delete_operation(operation_id)
         self.load_operations()
         self.reload_data()
 

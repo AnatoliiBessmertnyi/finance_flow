@@ -21,11 +21,23 @@ class OperationsController(QDialog):
         self.handler = handler
         self.mode = mode
         self.operation_id = operation_id
+        self.current_categories = []
 
+        self.load_categories()
         if mode == 'edit':
             self.load_operation_data()
+        else:
+            self.view.date.setDateTime(QDateTime.currentDateTime())
 
         self.view.pushButton.clicked.connect(self.save_operation)
+
+    def load_categories(self):
+        """Загружает категории из базы данных и добавляет их в QComboBox."""
+        new_categories = self.handler.get_all_categories()
+        if new_categories != self.current_categories:
+            self.current_categories = new_categories
+            self.view.category_cb.clear()
+            self.view.category_cb.addItems(new_categories)
 
     def load_operation_data(self):
         """Загружает данные операции для редактирования."""
@@ -56,4 +68,4 @@ class OperationsController(QDialog):
                 self.operation_id, date, category, description, balance, status
             )
 
-        self.accept()
+        self.view.accept()

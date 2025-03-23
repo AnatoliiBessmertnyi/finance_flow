@@ -1,3 +1,6 @@
+from PySide6 import QtSql
+
+
 class OperationsHandler:
     def __init__(self, db_handler):
         self.db_handler = db_handler
@@ -45,3 +48,13 @@ class OperationsHandler:
                 'status': query.value('Status')
             }
         return None
+
+    def get_all_categories(self) -> list:
+        """Возвращает список всех категорий из базы данных."""
+        query = QtSql.QSqlQuery(
+            'SELECT Name FROM categories', self.db_handler.db
+        )
+        categories = []
+        while query.next():
+            categories.append(query.value(0))
+        return categories
