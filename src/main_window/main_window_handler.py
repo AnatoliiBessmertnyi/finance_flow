@@ -24,8 +24,7 @@ class MainWindowHandler:
                 Date VARCHAR(20),
                 Category VARCHAR(20),
                 Description VARCHAR(20),
-                Balance REAL,
-                Status VARCHAR(20)
+                Balance REAL
             )
         ''')
         query.exec('''
@@ -59,21 +58,17 @@ class MainWindowHandler:
                 'date': query.value('Date'),
                 'category': query.value('Category'),
                 'description': query.value('Description'),
-                'balance': query.value('Balance'),
-                'status': query.value('Status')
+                'balance': query.value('Balance')
             })
         return operations
 
-    def get_total(self, column, filter=None, value=None):
-        """Возвращает сумму значений в колонке с опциональным фильтром."""
+    def get_total(self, column, condition=None):
+        """Возвращает сумму значений в колонке с опциональным условием."""
         sql_query = f'SELECT SUM({column}) FROM finances'
-        if filter and value:
-            sql_query += f' WHERE {filter} = ?'
-            params = [value]
-        else:
-            params = None
+        if condition:
+            sql_query += f' WHERE {condition}'
 
-        query = self.execute_query(sql_query, params)
+        query = self.execute_query(sql_query)
         if query.next():
             return str(query.value(0)) or '0'
         return '0'
@@ -82,7 +77,7 @@ class MainWindowHandler:
         return self.get_total(column='Balance')
 
     def total_income(self):
-        return self.get_total(column='Balance', filter='Status', value='Доход')
+        return self.get_total(column='Balance', condition='Balance >= 0')
 
     def total_outcome(self):
-        return self.get_total(column='Balance', filter='Status', value='Затраты')
+        return self.get_total(column='Balance', condition='Balance < 0')

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,6 +34,18 @@ border-radius: 6px;</string>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QLabel" name="title_lbl">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">color: #c8fafa;
 font-weight: bold;
@@ -119,32 +131,6 @@ padding-left: 8px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="operation_type_cb">
-        <property name="styleSheet">
-         <string notr="true">QComboBox {
-font-size: 14px;
-color: #c8fafa;
-padding-left: 8px;
-}
-
-QComboBox:item {
-color: white;
-padding-left: 8px;
-}</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Доход</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Затраты</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="reload_cb">
         <property name="styleSheet">
          <string notr="true">font-size: 14px;
@@ -158,6 +144,18 @@ padding-left: 10px;</string>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
 color: #c8fafa;

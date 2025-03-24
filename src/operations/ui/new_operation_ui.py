@@ -24,7 +24,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(400, 300)
+        Dialog.resize(400, 342)
         Dialog.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0, y2:0, stop:0 rgba(0, 102, 102, 255), stop:1 rgba(0, 191, 255, 255));\n"
 "font-family: Roboto;")
         self.verticalLayout_2 = QVBoxLayout(Dialog)
@@ -40,6 +40,8 @@ class Ui_Dialog(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.title_lbl = QLabel(self.operation_frame)
         self.title_lbl.setObjectName(u"title_lbl")
+        self.title_lbl.setMinimumSize(QSize(0, 40))
+        self.title_lbl.setMaximumSize(QSize(16777215, 40))
         self.title_lbl.setStyleSheet(u"color: #c8fafa;\n"
 "font-weight: bold;\n"
 "font-size: 18px;\n"
@@ -94,23 +96,6 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.amount_le)
 
-        self.operation_type_cb = QComboBox(self.operation_frame)
-        self.operation_type_cb.addItem("")
-        self.operation_type_cb.addItem("")
-        self.operation_type_cb.setObjectName(u"operation_type_cb")
-        self.operation_type_cb.setStyleSheet(u"QComboBox {\n"
-"font-size: 14px;\n"
-"color: #c8fafa;\n"
-"padding-left: 8px;\n"
-"}\n"
-"\n"
-"QComboBox:item {\n"
-"color: white;\n"
-"padding-left: 8px;\n"
-"}")
-
-        self.verticalLayout.addWidget(self.operation_type_cb)
-
         self.reload_cb = QCheckBox(self.operation_frame)
         self.reload_cb.setObjectName(u"reload_cb")
         self.reload_cb.setStyleSheet(u"font-size: 14px;\n"
@@ -121,6 +106,8 @@ class Ui_Dialog(object):
 
         self.pushButton = QPushButton(self.operation_frame)
         self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setMinimumSize(QSize(0, 40))
+        self.pushButton.setMaximumSize(QSize(16777215, 40))
         self.pushButton.setStyleSheet(u"QPushButton {\n"
 "color: #c8fafa;\n"
 "background-color: rgba(255, 255, 255, 30);\n"
@@ -159,9 +146,6 @@ class Ui_Dialog(object):
         self.category_cb.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044e", None))
         self.description_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435", None))
         self.amount_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u043c\u043c\u0430", None))
-        self.operation_type_cb.setItemText(0, QCoreApplication.translate("Dialog", u"\u0414\u043e\u0445\u043e\u0434", None))
-        self.operation_type_cb.setItemText(1, QCoreApplication.translate("Dialog", u"\u0417\u0430\u0442\u0440\u0430\u0442\u044b", None))
-
         self.reload_cb.setText(QCoreApplication.translate("Dialog", u"\u0415\u0436\u0435\u043c\u0435\u0441\u044f\u0447\u043d\u0430\u044f \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044f", None))
         self.pushButton.setText(QCoreApplication.translate("Dialog", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
     # retranslateUi

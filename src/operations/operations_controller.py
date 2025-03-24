@@ -50,7 +50,6 @@ class OperationsController(QDialog):
             self.view.category_cb.setCurrentText(operation_data['category'])
             self.view.description_le.setText(operation_data['description'])
             self.view.amount_le.setText(str(operation_data['balance']))
-            self.view.operation_type_cb.setCurrentText(operation_data['status'])
 
     def save_operation(self):
         """Сохраняет новую или отредактированную операцию."""
@@ -58,14 +57,11 @@ class OperationsController(QDialog):
         category = self.view.category_cb.currentText()
         description = self.view.description_le.text()
         balance = self.view.amount_le.text()
-        status = self.view.operation_type_cb.currentText()
         if self.mode == 'new':
-            self.handler.add_operation(
-                date, category, description, balance, status
-            )
+            self.handler.add_operation(date, category, description, balance)
         else:
             self.handler.edit_operation(
-                self.operation_id, date, category, description, balance, status
+                self.operation_id, date, category, description, balance
             )
 
         self.view.accept()
