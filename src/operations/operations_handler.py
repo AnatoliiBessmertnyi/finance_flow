@@ -1,5 +1,5 @@
 from PySide6 import QtSql
-
+from datetime import datetime, timedelta
 
 class OperationsHandler:
     def __init__(self, db_handler):
@@ -7,6 +7,9 @@ class OperationsHandler:
 
     def add_operation(self, date, category, description, balance):
         """Добавляет новую операцию."""
+        if isinstance(date, str):
+            date_obj = datetime.strptime(date, "%d.%m.%Y %H:%M")
+            date = date_obj.strftime("%Y-%m-%d %H:%M")
         query = '''
             INSERT INTO finances (Date, Category, Description, Balance)
             VALUES (?, ?, ?, ?)
@@ -19,6 +22,9 @@ class OperationsHandler:
         self, operation_id, date, category, description, balance
     ):
         """Редактирует существующую операцию."""
+        if isinstance(date, str):
+            date_obj = datetime.strptime(date, "%d.%m.%Y %H:%M")
+            date = date_obj.strftime("%Y-%m-%d %H:%M")
         query = '''
             UPDATE finances
             SET Date=?, Category=?, Description=?, Balance=?

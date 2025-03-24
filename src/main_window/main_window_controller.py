@@ -21,6 +21,7 @@ class MainWindowController(QMainWindow):
         self.view = view
         self.handler = handler
         self.handler.initialize_database()
+        self.current_period = "month"
 
         self.initialize_operations()
         self.load_operations()
@@ -37,17 +38,28 @@ class MainWindowController(QMainWindow):
 
     def load_operations(self):
         """Загружает операции из базы данных и отображает их в таблице."""
-        self.handler.fetch_all_operations()
+        self.handler.fetch_all_operations(self.current_period)
         self.model = QSqlTableModel(self)
         self.model.setTable('finances')
+
+        date_filter = self.handler._get_date_filter(self.current_period)
+        if date_filter:
+            self.model.setFilter(date_filter)
+
         self.model.select()
         self.view.table_container.setModel(self.model)
         self.view.table_container.hideColumn(0)
 
     def reload_data(self):
-        self.view.balance_lbl.setText(self.handler.total_balance())
-        self.view.income_balance_lbl.setText(self.handler.total_income())
-        self.view.outcome_balance_lbl.setText(self.handler.total_outcome())
+        self.view.balance_lbl.setText(
+            self.handler.total_balance(self.current_period)
+        )
+        self.view.income_balance_lbl.setText(
+            self.handler.total_income(self.current_period)
+        )
+        self.view.outcome_balance_lbl.setText(
+            self.handler.total_outcome(self.current_period)
+        )
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
