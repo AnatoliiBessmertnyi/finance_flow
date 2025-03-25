@@ -22,6 +22,7 @@ class MainWindowController(QMainWindow):
         self.handler = handler
         self.handler.initialize_database()
         self.current_period = 'month'
+        self.current_operations = []
 
         self.initialize_operations()
         self.load_operations()
@@ -38,7 +39,9 @@ class MainWindowController(QMainWindow):
 
     def load_operations(self):
         """Загружает операции из базы данных и отображает их в таблице."""
-        self.handler.fetch_all_operations(self.current_period)
+        self.current_operations = self.handler.fetch_all_operations(
+            self.current_period
+        )
         self.model = QSqlTableModel(self)
         self.model.setTable('finances')
 
@@ -50,6 +53,34 @@ class MainWindowController(QMainWindow):
         self.view.table_container.setModel(self.model)
         self.view.table_container.hideColumn(0)
 
+    def show_category_statistics(self):
+        """Выводит статистику по категориям на основе загруженных данных."""
+        if not self.current_operations:
+            print("Нет данных об операциях. Сначала загрузите операции.")
+            return
+
+        statistics = self.get_category_statistics()
+
+        print("\nСтатистика по категориям (на основе загруженных операций):")
+        print("----------------------------------------")
+        for category, total in sorted(statistics.items(), key=lambda x: abs(x[1]), reverse=True):
+            print(f"{category:<15}: {total:>8.2f}")
+        print("----------------------------------------")
+
+    def get_category_statistics(self):
+        """
+        Возвращает статистику по категориям на основе уже загруженных операций.
+        Формат: {'Категория': сумма, ...}
+        """
+        statistics = {}
+
+        for op in self.current_operations:
+            category = op['category']
+            amount = op['balance']
+            statistics[category] = statistics.get(category, 0) + amount
+
+        return statistics
+
     def reload_data(self):
         self.view.balance_lbl.setText(
             self.handler.total_balance(self.current_period)
@@ -60,6 +91,7 @@ class MainWindowController(QMainWindow):
         self.view.outcome_balance_lbl.setText(
             self.handler.total_outcome(self.current_period)
         )
+        self.show_category_statistics()
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
