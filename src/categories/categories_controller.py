@@ -35,11 +35,13 @@ class CategoriesController:
         category_name = self.view.get_category_name()
         if category_name:
             if self.handler.category_exists(category_name):
-                self.view.show_error("Категория с таким именем уже существует.")
+                self.view.show_error(
+                    'Категория с таким именем уже существует.'
+                )
                 return
 
             if self.handler.get_category_count() >= 10:
-                self.view.show_error("Достигнут лимит категорий (10 штук).")
+                self.view.show_error('Достигнут лимит категорий (10 штук).')
                 return
 
             self.view.table_container.cellChanged.disconnect(

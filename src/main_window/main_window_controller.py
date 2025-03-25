@@ -21,7 +21,7 @@ class MainWindowController(QMainWindow):
         self.view = view
         self.handler = handler
         self.handler.initialize_database()
-        self.current_period = "month"
+        self.current_period = 'month'
 
         self.initialize_operations()
         self.load_operations()
