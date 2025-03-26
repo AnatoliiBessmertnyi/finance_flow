@@ -22,7 +22,6 @@ class MainWindowController(QMainWindow):
         self.handler = handler
         self.handler.initialize_database()
         self.current_period = 'month'
-        self.current_operations = []
 
         self.initialize_operations()
         self.load_operations()
@@ -39,9 +38,7 @@ class MainWindowController(QMainWindow):
 
     def load_operations(self):
         """Загружает операции из базы данных и отображает их в таблице."""
-        self.current_operations = self.handler.fetch_all_operations(
-            self.current_period
-        )
+        self.handler.fetch_all_operations(self.current_period)
         self.model = QSqlTableModel(self)
         self.model.setTable('finances')
 
@@ -53,114 +50,6 @@ class MainWindowController(QMainWindow):
         self.view.table_container.setModel(self.model)
         self.view.table_container.hideColumn(0)
 
-    def show_category_statistics(self):
-        """Выводит статистику по категориям на основе загруженных данных."""
-        if not self.current_operations:
-            print("Нет данных об операциях. Сначала загрузите операции.")
-            return
-
-        statistics = self.get_category_statistics()
-
-        print("\nСтатистика по категориям (на основе загруженных операций):")
-        print("----------------------------------------")
-        for category, total in sorted(statistics.items(), key=lambda x: abs(x[1]), reverse=True):
-            print(f"{category:<15}: {total:>8.2f}")
-        print("----------------------------------------")
-
-    def get_category_statistics(self):
-        """
-        Возвращает статистику по категориям на основе уже загруженных операций.
-        Формат: {'Категория': сумма, ...}
-        """
-        statistics = {}
-
-        for op in self.current_operations:
-            category = op['category']
-            amount = op['balance']
-            statistics[category] = statistics.get(category, 0) + amount
-
-        return statistics
-
-    def get_category_shares_detailed(self, top_n=5):
-        """
-        Возвращает доли по категориям с правильным разделением на доходы и расходы.
-        Для расходов берется абсолютное значение.
-        Формат: {
-            'income': {'Категория': доля_в_%, ...},
-            'expense': {'Категория': доля_в_%, ...}
-        }
-        """
-        if not self.current_operations:
-            return {'income': {}, 'expense': {}}
-
-        # Сначала правильно разделяем доходы и расходы
-        income_stats = {}
-        expense_stats = {}
-        
-        for op in self.current_operations:
-            category = op['category']
-            amount = op['balance']
-            if amount >= 0:
-                income_stats[category] = income_stats.get(category, 0) + amount
-            else:
-                expense_stats[category] = expense_stats.get(category, 0) + abs(amount)
-
-        def calculate_shares(items, top_n):
-            if not items:
-                return {}
-                
-            total = sum(items.values())
-            sorted_items = sorted(items.items(), key=lambda x: x[1], reverse=True)
-            
-            # Берем топ-N категорий или все, если их меньше
-            top_items = sorted_items[:top_n]
-            other_sum = sum(v for _, v in sorted_items[top_n:])
-            
-            shares = {
-                k: (v / total) * 100
-                for k, v in top_items
-            }
-            
-            # Добавляем "Другое" только если есть что добавлять
-            if other_sum > 0 and len(sorted_items) > top_n:
-                shares['Остальное'] = (other_sum / total) * 100
-                    
-            return shares
-        
-        return {
-            'income': calculate_shares(income_stats, top_n),
-            'expense': calculate_shares(expense_stats, top_n)
-        }
-
-    def show_detailed_shares(self):
-        """Выводит доли доходов и расходов с правильным разделением."""
-        shares = self.get_category_shares_detailed()
-        
-        print("\nДетализация долей:")
-        print("="*50)
-        
-        # Вывод доходов
-        if shares['income']:
-            print("\nДоходы (Топ-5 + Другое):")
-            print("-"*50)
-            for category, share in shares['income'].items():
-                print(f"{category:<20}: {share:>6.2f}%")
-            print(f"Всего категорий доходов: {len(shares['income'])}")
-        else:
-            print("\nНет данных о доходах")
-        
-        # Вывод расходов
-        if shares['expense']:
-            print("\nРасходы (Топ-5 + Другое):")
-            print("-"*50)
-            for category, share in shares['expense'].items():
-                print(f"{category:<20}: {share:>6.2f}%")
-            print(f"Всего категорий расходов: {len(shares['expense'])}")
-        else:
-            print("\nНет данных о расходах")
-        
-        print("="*50)
-
     def reload_data(self):
         self.view.balance_lbl.setText(
             self.handler.total_balance(self.current_period)
@@ -171,8 +60,7 @@ class MainWindowController(QMainWindow):
         self.view.outcome_balance_lbl.setText(
             self.handler.total_outcome(self.current_period)
         )
-        self.show_category_statistics()
-        self.show_detailed_shares()
+        print(self.handler.get_category_statistics_detailed())
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""

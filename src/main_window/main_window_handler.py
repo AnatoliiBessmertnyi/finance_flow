@@ -15,6 +15,7 @@ class MainWindowHandler:
     def __init__(self):
         self.db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
         self.db.setDatabaseName('finance_db.db')
+        self.operations = []
 
     def initialize_database(self):
         """Создает базу данных и таблицы, если они не существуют."""
@@ -73,12 +74,10 @@ class MainWindowHandler:
 
     def fetch_all_operations(self, period='month'):
         """Возвращает все операции из базы данных."""
+        operations = []
         date_filter = self._get_date_filter(period)
         sql_query = f'SELECT * FROM finances WHERE {date_filter}'
-        print(sql_query)
         query = self.execute_query(sql_query)
-        print(query)
-        operations = []
         while query.next():
             operations.append({
                 'id': query.value('ID'),
@@ -87,8 +86,76 @@ class MainWindowHandler:
                 'description': query.value('Description'),
                 'balance': query.value('Balance')
             })
-        print(operations)
-        return operations
+        self.operations = operations
+
+    def get_category_statistics_detailed(self, top_n=5):
+        """
+        Возвращает статистику по категориям с разделением на доходы/расходы.
+        Вызывается из контроллера с уже загруженными операциями.
+        """
+        if not self.operations:
+            return {
+                'income': {'total': 0, 'categories': {}},
+                'expense': {'total': 0, 'categories': {}}
+            }
+
+        income_stats = {}
+        expense_stats = {}
+        total_income = 0
+        total_expense = 0
+
+        for op in self.operations:
+            category = op['category']
+            amount = op['balance']
+            if amount >= 0:
+                income_stats[category] = income_stats.get(category, 0) + amount
+                total_income += amount
+            else:
+                abs_amount = abs(amount)
+                expense_stats[category] = (
+                    expense_stats.get(category, 0) + abs_amount
+                )
+                total_expense += abs_amount
+
+        def calculate_shares(items, total_amount, top_n):
+            if not items or total_amount == 0:
+                return {}
+
+            sorted_items = sorted(
+                items.items(), key=lambda x: x[1], reverse=True
+            )
+            top_items = sorted_items[:top_n]
+            other_sum = sum(v for _, v in sorted_items[top_n:])
+
+            result = {}
+            for category, amount in top_items:
+                result[category] = {
+                    'sum': amount,
+                    'share': (amount / total_amount) * 100
+                }
+
+            if other_sum > 0 and len(sorted_items) > top_n:
+                result['Остальное'] = {
+                    'sum': other_sum,
+                    'share': (other_sum / total_amount) * 100
+                }
+
+            return result
+
+        return {
+            'income': {
+                'total': total_income,
+                'categories': calculate_shares(
+                    income_stats, total_income, top_n
+                )
+            },
+            'expense': {
+                'total': total_expense,
+                'categories': calculate_shares(
+                    expense_stats, total_expense, top_n
+                )
+            }
+        }
 
     def get_total(self, column, condition=None, period='month'):
         """Возвращает сумму значений в колонке с опциональным условием."""
