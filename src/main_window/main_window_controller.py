@@ -51,16 +51,12 @@ class MainWindowController(QMainWindow):
         self.view.table_container.hideColumn(0)
 
     def reload_data(self):
-        self.view.balance_lbl.setText(
-            self.handler.total_balance(self.current_period)
-        )
-        self.view.income_balance_lbl.setText(
-            self.handler.total_income(self.current_period)
-        )
-        self.view.outcome_balance_lbl.setText(
-            self.handler.total_outcome(self.current_period)
-        )
-        print(self.handler.get_category_statistics_detailed())
+        sorted_data: dict = self.handler.get_category_statistics_detailed()
+        total_income = sorted_data['income']['total']
+        total_outcome = sorted_data['expense']['total']
+        self.view.balance_lbl.setText(str(int(total_income + total_outcome)))
+        self.view.income_balance_lbl.setText(str(int(total_income)))
+        self.view.outcome_balance_lbl.setText(str(int(total_outcome)))
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""

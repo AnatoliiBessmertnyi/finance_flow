@@ -111,19 +111,25 @@ class MainWindowHandler:
                 income_stats[category] = income_stats.get(category, 0) + amount
                 total_income += amount
             else:
-                abs_amount = abs(amount)
                 expense_stats[category] = (
-                    expense_stats.get(category, 0) + abs_amount
+                    expense_stats.get(category, 0) + amount
                 )
-                total_expense += abs_amount
+                total_expense += amount
 
         def calculate_shares(items, total_amount, top_n):
             if not items or total_amount == 0:
                 return {}
 
-            sorted_items = sorted(
-                items.items(), key=lambda x: x[1], reverse=True
-            )
+            if total_amount < 0:
+                sorted_items = sorted(
+                    items.items(), key=lambda x: abs(x[1]), reverse=True
+                )
+                total_amount = abs(total_amount)
+            else:
+                sorted_items = sorted(
+                    items.items(), key=lambda x: x[1], reverse=True
+                )
+
             top_items = sorted_items[:top_n]
             other_sum = sum(v for _, v in sorted_items[top_n:])
 
@@ -131,13 +137,13 @@ class MainWindowHandler:
             for category, amount in top_items:
                 result[category] = {
                     'sum': amount,
-                    'share': (amount / total_amount) * 100
+                    'share': (abs(amount) / total_amount) * 100
                 }
 
-            if other_sum > 0 and len(sorted_items) > top_n:
+            if other_sum != 0 and len(sorted_items) > top_n:
                 result['Остальное'] = {
                     'sum': other_sum,
-                    'share': (other_sum / total_amount) * 100
+                    'share': (abs(other_sum) / total_amount) * 100
                 }
 
             return result
@@ -156,37 +162,6 @@ class MainWindowHandler:
                 )
             }
         }
-
-    def get_total(self, column, condition=None, period='month'):
-        """Возвращает сумму значений в колонке с опциональным условием."""
-        date_filter = self._get_date_filter(period)
-        sql_query = f'SELECT SUM({column}) FROM finances'
-
-        conditions = []
-        if date_filter:
-            conditions.append(date_filter)
-        if condition:
-            conditions.append(condition)
-        if conditions:
-            sql_query += ' WHERE ' + ' AND '.join(conditions)
-
-        query = self.execute_query(sql_query)
-        if query.next():
-            return str(query.value(0)) or '0'
-        return '0'
-
-    def total_balance(self, period='month'):
-        return self.get_total(column='Balance', period=period)
-
-    def total_income(self, period='month'):
-        return self.get_total(
-            column='Balance', condition='Balance >= 0', period=period
-        )
-
-    def total_outcome(self, period='month'):
-        return self.get_total(
-            column='Balance', condition='Balance < 0', period=period
-        )
 
     def _get_date_filter(self, period='month'):
         today = datetime.now()
