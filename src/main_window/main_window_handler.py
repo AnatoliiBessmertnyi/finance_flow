@@ -5,10 +5,10 @@ from PySide6 import QtSql, QtWidgets
 
 class MainWindowHandler:
     DEFAULT_CATEGORIES = [
-        'Продукты',
-        'Транспорт',
         'Жилье',
+        'Продукты',
         'Развлечения',
+        'Транспорт',
         'Другое'
     ]
 

@@ -16,7 +16,7 @@ class CategoriesHandler:
             return False
         return True
 
-    def fetch_all_categories(self) -> list:
+    def fetch_all_categories(self) -> list[str]:
         """Возвращает список всех категорий из базы данных."""
         query = QtSql.QSqlQuery('SELECT Name FROM categories', self.db)
         categories = []

@@ -6,6 +6,14 @@ if TYPE_CHECKING:
 
 
 class CategoriesController:
+    PROTECTED_CATEGORIES = [
+        'Продукты',
+        'Транспорт',
+        'Жилье',
+        'Развлечения',
+        'Другое'
+    ]
+
     def __init__(self, view: 'CategoriesView', handler: 'CategoriesHandler'):
         self.view = view
         self.handler = handler
@@ -62,10 +70,14 @@ class CategoriesController:
             category_name = (
                 self.view.table_container.item(selected_row, 0).text()
             )
+            if category_name in self.PROTECTED_CATEGORIES:
+                self.view.show_error('Нельзя удалить системную категорию.')
+                return
+
             if self.handler.delete_category(category_name):
                 self.view.table_container.removeRow(selected_row)
         else:
-            self.view.show_error("Не выбрана категория для удаления.")
+            self.view.show_error('Не выбрана категория для удаления.')
 
     def on_cell_double_clicked(self, row: int, _):
         """Сохраняет старое значение перед редактированием."""

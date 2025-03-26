@@ -1,6 +1,7 @@
 from PySide6 import QtSql
 from datetime import datetime, timedelta
 
+
 class OperationsHandler:
     def __init__(self, db_handler):
         self.db_handler = db_handler
@@ -60,6 +61,17 @@ class OperationsHandler:
             'SELECT Name FROM categories', self.db_handler.db
         )
         categories = []
+        other_category = None
+
         while query.next():
-            categories.append(query.value(0))
+            category = query.value(0)
+            if category == 'Другое':
+                other_category = category
+            else:
+                categories.append(category)
+
+        categories.sort()
+        if other_category:
+            categories.append(other_category)
+
         return categories
