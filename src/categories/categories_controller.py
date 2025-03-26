@@ -32,11 +32,26 @@ class CategoriesController:
         self.view.table_container.cellDoubleClicked.connect(
             self.on_cell_double_clicked
         )
+        self.view.table_container.itemSelectionChanged.connect(
+            self.protect_default_categoires
+        )
 
     def load_categories(self):
         """Загружает категории из базы данных и отображает их в таблице."""
         categories = self.handler.fetch_all_categories()
         self.view.load_categories(categories)
+
+    def protect_default_categoires(self):
+        selected_items = self.view.table_container.selectedItems()
+        if not selected_items:
+            self.view.delete_btn.setEnabled(False)
+            return
+
+        selected_row = self.view.table_container.currentRow()
+        category_name = self.view.table_container.item(selected_row, 0).text()
+        self.view.delete_btn.setEnabled(
+            category_name not in self.PROTECTED_CATEGORIES
+        )
 
     def on_add_category(self):
         """Обрабатывает нажатие кнопки добавления категории."""
@@ -70,9 +85,6 @@ class CategoriesController:
             category_name = (
                 self.view.table_container.item(selected_row, 0).text()
             )
-            if category_name in self.PROTECTED_CATEGORIES:
-                self.view.show_error('Нельзя удалить системную категорию.')
-                return
 
             if self.handler.delete_category(category_name):
                 self.view.table_container.removeRow(selected_row)
@@ -93,14 +105,17 @@ class CategoriesController:
     def on_category_updated(self, old_name: str, new_name: str):
         """Обновляет название категории в базе данных."""
         if self.handler.category_exists(new_name):
-            self.view.show_error("Категория с таким именем уже существует.")
+            self.view.show_error('Категория с таким именем уже существует.')
             self.restore_old_name()
             return
-
-        if self.handler.update_category(old_name, new_name):
-            print(f"Категория '{old_name}' успешно обновлена на '{new_name}'.")
+        elif old_name in self.PROTECTED_CATEGORIES:
+            self.view.show_error('Нельзя изменять системную категорию.')
+            self.restore_old_name()
+            return
+        elif self.handler.update_category(old_name, new_name):
+            print(f'Категория "{old_name}" успешно обновлена на "{new_name}".')
         else:
-            self.view.show_error("Ошибка при обновлении категории.")
+            self.view.show_error('Ошибка при обновлении категории.')
             self.load_categories()
 
     def restore_old_name(self):
