@@ -2,9 +2,10 @@ import ctypes
 import os
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (QApplication, QHeaderView, QMainWindow,
-                               QMessageBox, QStyledItemDelegate, QTableView)
+from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
+                               QMainWindow, QMessageBox, QStyledItemDelegate,
+                               QWidget)
 
 from src.main_window.ui.main_window_ui import Ui_MainWindow
 
@@ -80,3 +81,26 @@ class CenterAlignDelegate(QStyledItemDelegate):
     def initStyleOption(self, option, index):
         super().initStyleOption(option, index)
         option.displayAlignment = Qt.AlignCenter
+
+
+class CategoryWidget(QWidget):
+    def __init__(self, name: str, amount: int, parent=None):
+        super().__init__(parent)
+        
+        # Иконка (замените на ваши реальные иконки)
+        self.icon = QLabel()
+        self.icon.setText('icon')
+        
+        # Название категории
+        self.name_label = QLabel(name)
+        
+        # Сумма (отображаем как положительное число)
+        self.amount_label = QLabel(str(amount))
+        
+        # Основной layout
+        layout = QHBoxLayout()
+        layout.addWidget(self.icon)
+        layout.addWidget(self.name_label)
+        layout.addWidget(self.amount_label)
+        
+        self.setLayout(layout)

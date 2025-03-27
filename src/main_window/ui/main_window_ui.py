@@ -178,6 +178,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addLayout(self.title_container)
 
+        self.category_container = QHBoxLayout()
+        self.category_container.setSpacing(0)
+        self.category_container.setObjectName(u"category_container")
+
+        self.verticalLayout_2.addLayout(self.category_container)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
@@ -284,7 +290,6 @@ class Ui_MainWindow(object):
         self.table_container.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table_container.setShowGrid(False)
         self.table_container.setSortingEnabled(True)
-        self.table_container.horizontalHeader().setStretchLastSection(True)
         self.table_container.verticalHeader().setVisible(False)
 
         self.verticalLayout_3.addWidget(self.table_container)

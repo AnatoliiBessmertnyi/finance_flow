@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtSql import QSqlTableModel
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
 from src.categories.categories_controller import CategoriesController
 from src.categories.categories_handler import CategoriesHandler
@@ -9,6 +9,7 @@ from src.categories.categories_view import CategoriesView
 from src.operations.operations_controller import OperationsController
 from src.operations.operations_handler import OperationsHandler
 from src.operations.operations_view import OperationsView
+from src.main_window.main_window_view import CategoryWidget
 
 if TYPE_CHECKING:
     from src.main_window.main_window_handler import MainWindowHandler
@@ -57,6 +58,58 @@ class MainWindowController(QMainWindow):
         self.view.balance_lbl.setText(str(int(total_income + total_outcome)))
         self.view.income_balance_lbl.setText(str(int(total_income)))
         self.view.outcome_balance_lbl.setText(str(int(total_outcome)))
+
+        # Очистка контейнера с диагностикой
+        print(f"=== Перед очисткой ===")
+        print(f"Всего элементов в container: {self.view.category_container.count()}")
+        
+        category_widgets_count = 0
+        
+        for i in reversed(range(self.view.category_container.count())):
+            item = self.view.category_container.itemAt(i)
+            
+            if item.layout():
+                print(f"Найден layout с {item.layout().count()} элементами")
+                for j in reversed(range(item.layout().count())):
+                    child_item = item.layout().itemAt(j)
+                    if child_item.widget() and isinstance(child_item.widget(), CategoryWidget):
+                        category_widgets_count += 1
+                        child_item.widget().deleteLater()
+                item.layout().deleteLater()
+            
+            elif item.widget() and isinstance(item.widget(), CategoryWidget):
+                category_widgets_count += 1
+                item.widget().deleteLater()
+        
+        print(f"Удалено CategoryWidget: {category_widgets_count}")
+        print(f"Осталось элементов: {self.view.category_container.count()}")
+        print("=== Очистка завершена ===")
+        
+        # Создаем вертикальный контейнер для категорий
+        v_layout = QVBoxLayout()
+        v_layout.setSpacing(5)
+        
+        # Добавляем категории расходов
+        for name, data in sorted_data['expense']['categories'].items():
+            category_widget = CategoryWidget(name, data['sum'])
+            v_layout.addWidget(category_widget)
+        
+        # Если категорий больше 5, разделяем на 2 колонки
+        if len(sorted_data['expense']['categories']) > 5:
+            half = len(sorted_data['expense']['categories']) // 2
+            v_layout1 = QVBoxLayout()
+            v_layout2 = QVBoxLayout()
+            
+            for i, (name, data) in enumerate(sorted_data['expense']['categories'].items()):
+                if i < half:
+                    v_layout1.addWidget(CategoryWidget(name, data['sum']))
+                else:
+                    v_layout2.addWidget(CategoryWidget(name, data['sum']))
+            
+            self.view.category_container.addLayout(v_layout1)
+            self.view.category_container.addLayout(v_layout2)
+        else:
+            self.view.category_container.addLayout(v_layout)
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
