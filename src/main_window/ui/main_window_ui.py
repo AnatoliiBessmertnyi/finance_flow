@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
-    QLabel, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QTableView, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QHBoxLayout,
+    QHeaderView, QLabel, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QTableView, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -198,6 +199,7 @@ class Ui_MainWindow(object):
 "border-radius: 6px;\n"
 "width: 230px;\n"
 "height: 50px;\n"
+"font-size: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "background-color: rgba(255, 255, 255, 40);\n"
@@ -223,6 +225,7 @@ class Ui_MainWindow(object):
 "border-radius: 6px;\n"
 "width: 230px;\n"
 "height: 50px;\n"
+"font-size: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "background-color: rgba(255, 255, 255, 40);\n"
@@ -248,6 +251,7 @@ class Ui_MainWindow(object):
 "border-radius: 6px;\n"
 "width: 230px;\n"
 "height: 50px;\n"
+"font-size: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "background-color: rgba(255, 255, 255, 40);\n"
@@ -274,28 +278,14 @@ class Ui_MainWindow(object):
 "border: 1px solid  rgba(255, 255, 255, 40);\n"
 "border-bottom-left-radius: 6px;\n"
 "border-bottom-right-radius: 6px;\n"
-"}\n"
-"QTableView::section {\n"
-"background-color: rgb(53, 53, 53);\n"
-"color: #c8fafa;\n"
-"border: none;\n"
-"height: 50px;\n"
-"font-size: 14px;\n"
-"}\n"
-"\n"
-"QTableView::item {\n"
-"border-style: none;\n"
-"border-bottom:  rgba(255, 255, 255, 50);\n"
-"}\n"
-"\n"
-"QTableView::item:selected {\n"
-"border: none;\n"
-"color: #E0F7FA;\n"
-"background-color: rgba(255, 255, 255, 50);\n"
 "}")
         self.table_container.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.table_container.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table_container.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table_container.setShowGrid(False)
         self.table_container.setSortingEnabled(True)
+        self.table_container.horizontalHeader().setStretchLastSection(True)
+        self.table_container.verticalHeader().setVisible(False)
 
         self.verticalLayout_3.addWidget(self.table_container)
 
