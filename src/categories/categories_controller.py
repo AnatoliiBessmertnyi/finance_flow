@@ -63,8 +63,8 @@ class CategoriesController:
                 )
                 return
 
-            if self.handler.get_category_count() >= 10:
-                self.view.show_error('Достигнут лимит категорий (10 штук).')
+            if self.handler.get_category_count() >= 12:
+                self.view.show_error('Достигнут лимит категорий (12 штук).')
                 return
 
             self.view.table_container.cellChanged.disconnect(

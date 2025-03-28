@@ -58,58 +58,69 @@ class MainWindowController(QMainWindow):
         self.view.balance_lbl.setText(str(int(total_income + total_outcome)))
         self.view.income_balance_lbl.setText(str(int(total_income)))
         self.view.outcome_balance_lbl.setText(str(int(total_outcome)))
+        self.update_amount_category(sorted_data)
 
-        # Очистка контейнера с диагностикой
-        print(f"=== Перед очисткой ===")
-        print(f"Всего элементов в container: {self.view.category_container.count()}")
-        
+    def update_amount_category(self, sorted_data: dict) -> None:
+        self.clear_category_widgets()
+        self.update_amount_category_widgets(sorted_data)
+
+    def clear_category_widgets(self) -> None:
+        """Очищает виджет категорий."""
         category_widgets_count = 0
-        
+
         for i in reversed(range(self.view.category_container.count())):
             item = self.view.category_container.itemAt(i)
-            
+
             if item.layout():
-                print(f"Найден layout с {item.layout().count()} элементами")
                 for j in reversed(range(item.layout().count())):
                     child_item = item.layout().itemAt(j)
-                    if child_item.widget() and isinstance(child_item.widget(), CategoryWidget):
+                    if child_item.widget() and isinstance(
+                        child_item.widget(), CategoryWidget
+                    ):
                         category_widgets_count += 1
                         child_item.widget().deleteLater()
                 item.layout().deleteLater()
-            
+
             elif item.widget() and isinstance(item.widget(), CategoryWidget):
                 category_widgets_count += 1
                 item.widget().deleteLater()
-        
-        print(f"Удалено CategoryWidget: {category_widgets_count}")
-        print(f"Осталось элементов: {self.view.category_container.count()}")
-        print("=== Очистка завершена ===")
-        
-        # Создаем вертикальный контейнер для категорий
-        v_layout = QVBoxLayout()
-        v_layout.setSpacing(5)
-        
-        # Добавляем категории расходов
-        for name, data in sorted_data['expense']['categories'].items():
-            category_widget = CategoryWidget(name, data['sum'])
-            v_layout.addWidget(category_widget)
-        
-        # Если категорий больше 5, разделяем на 2 колонки
-        if len(sorted_data['expense']['categories']) > 5:
-            half = len(sorted_data['expense']['categories']) // 2
-            v_layout1 = QVBoxLayout()
-            v_layout2 = QVBoxLayout()
-            
-            for i, (name, data) in enumerate(sorted_data['expense']['categories'].items()):
-                if i < half:
-                    v_layout1.addWidget(CategoryWidget(name, data['sum']))
-                else:
-                    v_layout2.addWidget(CategoryWidget(name, data['sum']))
-            
-            self.view.category_container.addLayout(v_layout1)
-            self.view.category_container.addLayout(v_layout2)
-        else:
+
+    def update_amount_category_widgets(self, sorted_data: dict) -> None:
+        """Добавляет обновленные категории.
+
+        :param dict sorted_data: Данные по категориям
+        """
+        categories = list(sorted_data['expense']['categories'].items())
+        total_categories = len(categories)
+        columns = 1 if total_categories <= 5 else 2
+
+        if columns == 1:
+            v_layout = QVBoxLayout()
+            v_layout.setSpacing(5)
+
+            for name, data in categories:
+                v_layout.addWidget(CategoryWidget(name, data['sum']))
+
+            v_layout.addStretch()
             self.view.category_container.addLayout(v_layout)
+
+        else:
+            v_layout_1 = QVBoxLayout()
+            v_layout_1.setSpacing(5)
+            v_layout_2 = QVBoxLayout()
+            v_layout_2.setSpacing(5)
+            half = (total_categories + 1) // 2
+
+            for i, (name, data) in enumerate(categories):
+                if i < half:
+                    v_layout_1.addWidget(CategoryWidget(name, data['sum']))
+                else:
+                    v_layout_2.addWidget(CategoryWidget(name, data['sum']))
+
+            v_layout_1.addStretch()
+            v_layout_2.addStretch()
+            self.view.category_container.addLayout(v_layout_1)
+            self.view.category_container.addLayout(v_layout_2)
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""

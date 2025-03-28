@@ -86,21 +86,42 @@ class CenterAlignDelegate(QStyledItemDelegate):
 class CategoryWidget(QWidget):
     def __init__(self, name: str, amount: int, parent=None):
         super().__init__(parent)
-        
-        # Иконка (замените на ваши реальные иконки)
+        self.name = name
+        self.amount = amount
+        self.setup_ui()
+        self.setup_style()
+
+    def setup_ui(self):
         self.icon = QLabel()
         self.icon.setText('icon')
-        
-        # Название категории
-        self.name_label = QLabel(name)
-        
-        # Сумма (отображаем как положительное число)
-        self.amount_label = QLabel(str(amount))
-        
-        # Основной layout
-        layout = QHBoxLayout()
-        layout.addWidget(self.icon)
-        layout.addWidget(self.name_label)
-        layout.addWidget(self.amount_label)
-        
-        self.setLayout(layout)
+        self.icon.setFixedSize(24, 24)
+
+        self.name_label = QLabel(self.name)
+        self.name_label.setFixedSize(100, 24)
+        self.name_label.setAlignment(Qt.AlignCenter)
+
+        self.amount_label = QLabel(str(self.amount) + ' ₽')
+        self.amount_label.setFixedSize(50, 24)
+
+        container = QHBoxLayout()
+        container.addWidget(self.icon)
+        container.addWidget(self.name_label)
+        container.addWidget(self.amount_label)
+
+        self.setLayout(container)
+
+    def setup_style(self):
+        self.name_label.setStyleSheet('''
+            background-color: rgba(255, 255, 255, 30);
+            border: 1px solid  rgba(255, 255, 255, 40);
+            border-radius: 4px;
+            font: 500 13px "Roboto";
+            color: #c8fafa;
+        ''')
+        self.amount_label.setStyleSheet('''
+            background-color: rgba(255, 255, 255, 30);
+            border: 1px solid  rgba(255, 255, 255, 40);
+            border-radius: 4px;
+            font: 600 14px "Roboto";
+            color: #c8fafa;
+        ''')

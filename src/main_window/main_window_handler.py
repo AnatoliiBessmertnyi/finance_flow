@@ -88,7 +88,7 @@ class MainWindowHandler:
             })
         self.operations = operations
 
-    def get_category_statistics_detailed(self, top_n=5):
+    def get_category_statistics_detailed(self, top_n=7):
         """
         Возвращает статистику по категориям с разделением на доходы/расходы.
         Вызывается из контроллера с уже загруженными операциями.

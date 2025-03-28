@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>728</width>
-    <height>600</height>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,167 +28,255 @@ font-family: Roboto;</string>
 border: 1px solid rgba(255, 255, 255, 40);
 border-radius: 6px;</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1,1">
          <property name="spacing">
-          <number>0</number>
+          <number>8</number>
          </property>
          <property name="leftMargin">
-          <number>8</number>
+          <number>16</number>
          </property>
          <property name="topMargin">
           <number>8</number>
          </property>
          <property name="rightMargin">
-          <number>8</number>
+          <number>16</number>
          </property>
          <property name="bottomMargin">
-          <number>8</number>
+          <number>16</number>
          </property>
          <item>
-          <widget class="QLabel" name="balance_title_lbl">
+          <widget class="QWidget" name="total_widget" native="true">
            <property name="styleSheet">
-            <string notr="true">color: #c8fafa;
+            <string notr="true">background: transparent;
+border: none;</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="balance_title_lbl">
+              <property name="styleSheet">
+               <string notr="true">color: #c8fafa;
 font-weight: bold;
 font-size: 18px;
 background-color: none;
 border: none;
 </string>
-           </property>
-           <property name="text">
-            <string>Текущий баланс</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="balance_lbl">
-           <property name="styleSheet">
-            <string notr="true">color: #c8fafa;
+              </property>
+              <property name="text">
+               <string>Текущий баланс</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="balance_lbl">
+              <property name="styleSheet">
+               <string notr="true">color: #c8fafa;
 font-size: 28px;
 background-color: none;
 border: none;
 </string>
-           </property>
-           <property name="text">
-            <string>1000</string>
-           </property>
+              </property>
+              <property name="text">
+               <string>1000</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="income_container">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>7</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="income_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
+          <widget class="QWidget" name="outcome_widget" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="outcome_container">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="outcome_icon">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: none;
+border: none;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap>:/icons/call_received.svg</pixmap>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="outcome_lbl">
+                <property name="styleSheet">
+                 <string notr="true">color: #c8fafa;
+font-size: 16px;
+background-color: none;
+border: none;
+font-weight: bold;</string>
+                </property>
+                <property name="text">
+                 <string>Траты</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="outcome_balance_lbl">
+              <property name="styleSheet">
+               <string notr="true">color: #c8fafa;
+font-size: 22px;
+background-color: none;
+border: none;
+</string>
+              </property>
+              <property name="text">
+               <string>-1000</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="income_widget" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="income_container">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="income_icon">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: none;
 border: none;
 padding-top: 10px;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/arrow_insert.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="income_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="income_lbl">
+                <property name="styleSheet">
+                 <string notr="true">color: #c8fafa;
 font-size: 16px;
 background-color: none;
 border: none;
 font-weight: bold;
 padding-top: 10px;</string>
-             </property>
-             <property name="text">
-              <string>Доход</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="income_balance_lbl">
-           <property name="styleSheet">
-            <string notr="true">color: #c8fafa;
+                </property>
+                <property name="text">
+                 <string>Доходы</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="income_balance_lbl">
+              <property name="styleSheet">
+               <string notr="true">color: #c8fafa;
 font-size: 22px;
 background-color: none;
 border: none;
 </string>
-           </property>
-           <property name="text">
-            <string>1000</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="outcome_container">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>7</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="outcome_icon">
-             <property name="maximumSize">
-              <size>
-               <width>24</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: none;
-border: none;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap>:/icons/call_received.svg</pixmap>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="outcome_lbl">
-             <property name="styleSheet">
-              <string notr="true">color: #c8fafa;
-font-size: 16px;
-background-color: none;
-border: none;
-font-weight: bold;</string>
-             </property>
-             <property name="text">
-              <string>Затраты</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="outcome_balance_lbl">
-           <property name="styleSheet">
-            <string notr="true">color: #c8fafa;
-font-size: 22px;
-background-color: none;
-border: none;
-</string>
-           </property>
-           <property name="text">
-            <string>1000</string>
-           </property>
+              </property>
+              <property name="text">
+               <string>1000</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -267,6 +355,18 @@ border: none;
           <layout class="QHBoxLayout" name="category_container">
            <property name="spacing">
             <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>4</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
+            <number>4</number>
            </property>
           </layout>
          </item>
@@ -402,6 +502,12 @@ background-color: rgba(255, 255, 255, 70);
     </item>
     <item>
      <widget class="QTableView" name="table_container">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
+      </property>
       <property name="styleSheet">
        <string notr="true">QTableView {
 background-color: rgba(255, 255, 255, 30);
