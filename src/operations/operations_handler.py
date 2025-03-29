@@ -1,5 +1,5 @@
 from PySide6 import QtSql
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class OperationsHandler:

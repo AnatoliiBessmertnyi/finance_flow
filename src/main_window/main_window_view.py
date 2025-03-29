@@ -14,7 +14,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.current_selected = 'income'
+        self.current_selected = 'outcome'
 
         self.income_frame.hide()
         self.setup_style()
@@ -62,14 +62,22 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
             }
         ''')
         self.active_style = ('''
-            border: 1px solid rgba(255, 255, 255, 40);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 30);
+            QWidget {
+                border: 2px solid rgba(255, 255, 255, 35);
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 25);
+            }
         ''')
         self.inactive_style = ('''
-            border: none;
-            border-radius: none;
-            background-color: none;
+            QWidget {
+                border: none;
+                border-radius: 8px;
+                background-color: none;
+            }
+            QWidget:hover {
+                border: 1px solid rgba(255, 255, 255, 20);
+                background-color: rgba(255, 255, 255, 10);
+            }
         ''')
 
     def set_icon(self, app: QApplication) -> None:
@@ -106,9 +114,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         """
         total_income = sorted_data['income']['total']
         total_outcome = sorted_data['outcome']['total']
-        self.balance_lbl.setText(str(int(total_income + total_outcome)))
-        self.income_balance_lbl.setText(str(int(total_income)))
-        self.outcome_balance_lbl.setText(str(int(total_outcome)))
+        self.balance_lbl.setText(str(int(total_income + total_outcome)) + ' ₽')
+        self.income_balance_lbl.setText(str(int(total_income)) + ' ₽')
+        self.outcome_balance_lbl.setText(str(int(total_outcome)) + ' ₽')
 
     def select_widget(self, widget_type: str):
         self.current_selected = widget_type
@@ -157,8 +165,6 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         columns = 1 if total_categories <= 5 else 2
 
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(4)
 
         if columns == 1:
             v_layout = QVBoxLayout()
@@ -188,7 +194,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
             h_layout = QHBoxLayout()
             h_layout.addLayout(v_layout1)
             h_layout.addLayout(v_layout2)
-            h_layout.setSpacing(20)
+            h_layout.setSpacing(4)
 
             main_layout.addLayout(h_layout)
 
@@ -198,25 +204,13 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         frame.setLayout(main_layout)
 
     def clear_category_widgets(self, frame: QFrame) -> None:
-        """Очищает виджет категорий внутри outcome_frame."""
-        if frame.layout() is None:
-            return
-        layout = frame.layout()
-
-        for i in reversed(range(layout.count())):
-            item = layout.itemAt(i)
-
-            if item.layout():
-                for j in reversed(range(item.layout().count())):
-                    child_item = item.layout().itemAt(j)
-                    if child_item.widget() and isinstance(
-                        child_item.widget(), CategoryWidget
-                    ):
-                        child_item.widget().deleteLater()
-                item.layout().deleteLater()
-
-            elif item.widget() and isinstance(item.widget(), CategoryWidget):
-                item.widget().deleteLater()
+        """Очистка фрейма."""
+        if frame.layout():
+            old_layout = frame.layout()
+            temp_widget = QWidget()
+            temp_widget.setLayout(old_layout)
+            temp_widget.deleteLater()
+        frame.setLayout(QVBoxLayout())
 
 
 class CenterAlignDelegate(QStyledItemDelegate):
@@ -239,11 +233,12 @@ class CategoryWidget(QWidget):
         self.icon.setFixedSize(24, 24)
 
         self.name_label = QLabel(self.name)
-        self.name_label.setFixedSize(100, 24)
-        self.name_label.setAlignment(Qt.AlignCenter)
+        self.name_label.setMinimumSize(100, 24)
+        self.name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        self.amount_label = QLabel(str(self.amount) + ' ₽')
-        self.amount_label.setFixedSize(50, 24)
+        self.amount_label = QLabel(str(int(self.amount)) + ' ₽')
+        self.amount_label.setMinimumSize(80, 24)
+        self.amount_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
         container = QHBoxLayout()
         container.addWidget(self.icon)
@@ -254,16 +249,18 @@ class CategoryWidget(QWidget):
 
     def setup_style(self):
         self.name_label.setStyleSheet('''
-            background-color: rgba(255, 255, 255, 30);
-            border: 1px solid  rgba(255, 255, 255, 40);
+            background-color: rgba(255, 255, 255, 20);
+            border: 1px solid  rgba(255, 255, 255, 30);
             border-radius: 4px;
             font: 500 13px "Roboto";
             color: #c8fafa;
+            padding-left: 4px;
         ''')
         self.amount_label.setStyleSheet('''
-            background-color: rgba(255, 255, 255, 30);
-            border: 1px solid  rgba(255, 255, 255, 40);
+            background-color: rgba(255, 255, 255, 20);
+            border: 1px solid  rgba(255, 255, 255, 30);
             border-radius: 4px;
             font: 600 14px "Roboto";
             color: #c8fafa;
+            padding-right: 4px;
         ''')
