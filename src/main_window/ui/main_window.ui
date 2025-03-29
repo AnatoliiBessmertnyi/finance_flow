@@ -149,10 +149,7 @@ border: none;
 border: none;</string>
                 </property>
                 <property name="text">
-                 <string/>
-                </property>
-                <property name="pixmap">
-                 <pixmap>:/icons/call_received.svg</pixmap>
+                 <string>icon</string>
                 </property>
                </widget>
               </item>
@@ -241,7 +238,7 @@ border: none;
 padding-top: 10px;</string>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>icon</string>
                 </property>
                </widget>
               </item>
@@ -352,23 +349,54 @@ border: none;
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="category_container">
-           <property name="spacing">
-            <number>0</number>
+          <widget class="QFrame" name="outcome_frame">
+           <property name="styleSheet">
+            <string notr="true">background: none;
+border: none;</string>
            </property>
-           <property name="leftMargin">
-            <number>4</number>
+           <layout class="QHBoxLayout" name="outcome_layout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="income_frame">
+           <property name="styleSheet">
+            <string notr="true">background: none;
+border: none;</string>
            </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
-            <number>4</number>
-           </property>
-          </layout>
+           <layout class="QHBoxLayout" name="income_layout">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
+           </layout>
+          </widget>
          </item>
          <item>
           <spacer name="verticalSpacer">
@@ -414,10 +442,6 @@ background-color: rgba(255, 255, 255, 70);
         <property name="text">
          <string>Новая операция</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/add.svg</normaloff>:/icons/add.svg</iconset>
-        </property>
         <property name="iconSize">
          <size>
           <width>24</width>
@@ -450,10 +474,6 @@ background-color: rgba(255, 255, 255, 70);
         <property name="text">
          <string>Редактировать операцию</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
-        </property>
         <property name="iconSize">
          <size>
           <width>24</width>
@@ -485,10 +505,6 @@ background-color: rgba(255, 255, 255, 70);
         </property>
         <property name="text">
          <string>Удалить операцию</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/icons/delete.svg</normaloff>:/icons/delete.svg</iconset>
         </property>
         <property name="iconSize">
          <size>

@@ -95,7 +95,6 @@ class Ui_MainWindow(object):
         self.outcome_icon.setMaximumSize(QSize(24, 24))
         self.outcome_icon.setStyleSheet(u"background-color: none;\n"
 "border: none;")
-        self.outcome_icon.setPixmap(QPixmap(u":/icons/call_received.svg"))
 
         self.outcome_container.addWidget(self.outcome_icon)
 
@@ -218,12 +217,27 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addLayout(self.title_container)
 
-        self.category_container = QHBoxLayout()
-        self.category_container.setSpacing(0)
-        self.category_container.setObjectName(u"category_container")
-        self.category_container.setContentsMargins(4, 4, 4, 4)
+        self.outcome_frame = QFrame(self.category_frame)
+        self.outcome_frame.setObjectName(u"outcome_frame")
+        self.outcome_frame.setStyleSheet(u"background: none;\n"
+"border: none;")
+        self.outcome_layout = QHBoxLayout(self.outcome_frame)
+        self.outcome_layout.setSpacing(0)
+        self.outcome_layout.setObjectName(u"outcome_layout")
+        self.outcome_layout.setContentsMargins(4, 4, 4, 4)
 
-        self.verticalLayout_2.addLayout(self.category_container)
+        self.verticalLayout_2.addWidget(self.outcome_frame)
+
+        self.income_frame = QFrame(self.category_frame)
+        self.income_frame.setObjectName(u"income_frame")
+        self.income_frame.setStyleSheet(u"background: none;\n"
+"border: none;")
+        self.income_layout = QHBoxLayout(self.income_frame)
+        self.income_layout.setSpacing(0)
+        self.income_layout.setObjectName(u"income_layout")
+        self.income_layout.setContentsMargins(4, 4, 4, 4)
+
+        self.verticalLayout_2.addWidget(self.income_frame)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -256,9 +270,6 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "")
-        icon = QIcon()
-        icon.addFile(u":/icons/add.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.new_btn.setIcon(icon)
         self.new_btn.setIconSize(QSize(24, 24))
 
         self.buttons_container.addWidget(self.new_btn)
@@ -282,9 +293,6 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/edit.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.edit_btn.setIcon(icon1)
         self.edit_btn.setIconSize(QSize(24, 24))
 
         self.buttons_container.addWidget(self.edit_btn)
@@ -308,9 +316,6 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/delete.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.delete_btn.setIcon(icon2)
         self.delete_btn.setIconSize(QSize(24, 24))
 
         self.buttons_container.addWidget(self.delete_btn)
@@ -347,10 +352,10 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Finance tracker", None))
         self.balance_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0431\u0430\u043b\u0430\u043d\u0441", None))
         self.balance_lbl.setText(QCoreApplication.translate("MainWindow", u"1000", None))
-        self.outcome_icon.setText("")
+        self.outcome_icon.setText(QCoreApplication.translate("MainWindow", u"icon", None))
         self.outcome_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0440\u0430\u0442\u044b", None))
         self.outcome_balance_lbl.setText(QCoreApplication.translate("MainWindow", u"-1000", None))
-        self.income_icon.setText("")
+        self.income_icon.setText(QCoreApplication.translate("MainWindow", u"icon", None))
         self.income_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0445\u043e\u0434\u044b", None))
         self.income_balance_lbl.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.category_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438", None))

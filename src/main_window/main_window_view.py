@@ -48,6 +48,16 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
                 border-bottom: 1px solid rgba(255, 255, 255, 50);
             }
         ''')
+        self.active_style = ('''
+            border: 1px solid rgba(255, 255, 255, 40);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 30);
+        ''')
+        self.inactive_style = ('''
+            border: none;
+            border-radius: none;
+            background-color: none;
+        ''')
 
     def set_icon(self, app: QApplication) -> None:
         """Установка иконки.
