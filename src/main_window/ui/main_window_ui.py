@@ -246,6 +246,8 @@ class Ui_MainWindow(object):
 
         self.header_container.addWidget(self.category_frame)
 
+        self.header_container.setStretch(0, 1)
+        self.header_container.setStretch(1, 1)
 
         self.verticalLayout_3.addLayout(self.header_container)
 

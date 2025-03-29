@@ -1,15 +1,16 @@
 from typing import TYPE_CHECKING
 
 from PySide6.QtSql import QSqlTableModel
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QWidget
+from PySide6.QtWidgets import (QFrame, QHBoxLayout, QMainWindow, QVBoxLayout,
+                               QWidget)
 
 from src.categories.categories_controller import CategoriesController
 from src.categories.categories_handler import CategoriesHandler
 from src.categories.categories_view import CategoriesView
+from src.main_window.main_window_view import CategoryWidget
 from src.operations.operations_controller import OperationsController
 from src.operations.operations_handler import OperationsHandler
 from src.operations.operations_view import OperationsView
-from src.main_window.main_window_view import CategoryWidget
 
 if TYPE_CHECKING:
     from src.main_window.main_window_handler import MainWindowHandler
@@ -54,6 +55,7 @@ class MainWindowController(QMainWindow):
         self.view.table_container.hideColumn(0)
 
     def setup_widget_selection(self):
+        self.select_widget(self.current_selected)
         self.view.income_widget.mousePressEvent = (
             lambda e: self.select_widget('income')
         )
@@ -95,40 +97,31 @@ class MainWindowController(QMainWindow):
     def reload_data(self):
         sorted_data: dict = self.handler.get_category_statistics_detailed()
         total_income = sorted_data['income']['total']
-        total_outcome = sorted_data['expense']['total']
+        total_outcome = sorted_data['outcome']['total']
         self.view.balance_lbl.setText(str(int(total_income + total_outcome)))
         self.view.income_balance_lbl.setText(str(int(total_income)))
         self.view.outcome_balance_lbl.setText(str(int(total_outcome)))
-        self.update_amount_category_widgets(sorted_data)
+        self.update_category_widgets(sorted_data)
 
-    def clear_category_widgets(self) -> None:
-        """Очищает виджет категорий внутри outcome_frame."""
-        if self.view.outcome_frame.layout() is None:
-            return
+    def update_category_widgets(self, sorted_data: dict):
+        self.update_amount_category_widgets(sorted_data, 'outcome')
+        self.update_amount_category_widgets(sorted_data, 'income')
 
-        layout = self.view.outcome_frame.layout()
-
-        for i in reversed(range(layout.count())):
-            item = layout.itemAt(i)
-
-            if item.layout():
-                for j in reversed(range(item.layout().count())):
-                    child_item = item.layout().itemAt(j)
-                    if child_item.widget() and isinstance(child_item.widget(), CategoryWidget):
-                        child_item.widget().deleteLater()
-                item.layout().deleteLater()
-
-            elif item.widget() and isinstance(item.widget(), CategoryWidget):
-                item.widget().deleteLater()
-
-    def update_amount_category_widgets(self, sorted_data: dict) -> None:
+    def update_amount_category_widgets(
+        self, sorted_data: dict, frame_type: str
+    ) -> None:
         """Добавляет обновленные категории в outcome_frame.
 
         :param dict sorted_data: Отсортированные данные
         """
-        self.clear_category_widgets()
-
-        categories = list(sorted_data['expense']['categories'].items())
+        frame = (
+            self.view.income_frame
+            if frame_type == 'income'
+            else self.view.outcome_frame
+        )
+        self.clear_category_widgets(frame)
+        categories_key = 'income' if frame_type == 'income' else 'outcome'
+        categories = list(sorted_data[categories_key]['categories'].items())
         total_categories = len(categories)
         columns = 1 if total_categories <= 5 else 2
 
@@ -168,10 +161,32 @@ class MainWindowController(QMainWindow):
 
             main_layout.addLayout(h_layout)
 
-        if self.view.outcome_frame.layout():
-            QWidget().setLayout(self.view.outcome_frame.layout())
+        if frame.layout():
+            QWidget().setLayout(frame.layout())
 
-        self.view.outcome_frame.setLayout(main_layout)
+        frame.setLayout(main_layout)
+
+    def clear_category_widgets(self, frame: QFrame) -> None:
+        """Очищает виджет категорий внутри outcome_frame."""
+        if frame.layout() is None:
+            return
+        print(frame)
+        layout = frame.layout()
+
+        for i in reversed(range(layout.count())):
+            item = layout.itemAt(i)
+
+            if item.layout():
+                for j in reversed(range(item.layout().count())):
+                    child_item = item.layout().itemAt(j)
+                    if child_item.widget() and isinstance(
+                        child_item.widget(), CategoryWidget
+                    ):
+                        child_item.widget().deleteLater()
+                item.layout().deleteLater()
+
+            elif item.widget() and isinstance(item.widget(), CategoryWidget):
+                item.widget().deleteLater()
 
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""

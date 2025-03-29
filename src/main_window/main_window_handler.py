@@ -96,13 +96,13 @@ class MainWindowHandler:
         if not self.operations:
             return {
                 'income': {'total': 0, 'categories': {}},
-                'expense': {'total': 0, 'categories': {}}
+                'outcome': {'total': 0, 'categories': {}}
             }
 
         income_stats = {}
-        expense_stats = {}
+        outcome_stats = {}
         total_income = 0
-        total_expense = 0
+        total_outcome = 0
 
         for op in self.operations:
             category = op['category']
@@ -111,10 +111,10 @@ class MainWindowHandler:
                 income_stats[category] = income_stats.get(category, 0) + amount
                 total_income += amount
             else:
-                expense_stats[category] = (
-                    expense_stats.get(category, 0) + amount
+                outcome_stats[category] = (
+                    outcome_stats.get(category, 0) + amount
                 )
-                total_expense += amount
+                total_outcome += amount
 
         def calculate_shares(items, total_amount, top_n):
             if not items or total_amount == 0:
@@ -155,10 +155,10 @@ class MainWindowHandler:
                     income_stats, total_income, top_n
                 )
             },
-            'expense': {
-                'total': total_expense,
+            'outcome': {
+                'total': total_outcome,
                 'categories': calculate_shares(
-                    expense_stats, total_expense, top_n
+                    outcome_stats, total_outcome, top_n
                 )
             }
         }
