@@ -1,11 +1,12 @@
 import ctypes
+import math
 import os
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
-                               QMainWindow, QMessageBox, QStyledItemDelegate,
-                               QWidget, QFrame, QVBoxLayout)
+from PySide6.QtCore import QPointF, QRectF, Qt
+from PySide6.QtGui import QBrush, QColor, QFont, QIcon, QPainter, QPen, QPixmap
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
+                               QLabel, QMainWindow, QMessageBox,
+                               QStyledItemDelegate, QVBoxLayout, QWidget)
 
 from src.main_window.ui.main_window_ui import Ui_MainWindow
 
@@ -160,29 +161,34 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         )
         self.clear_category_widgets(frame)
         categories_key = 'income' if frame_type == 'income' else 'outcome'
-        categories = list(sorted_data[categories_key]['categories'].items())
-        total_categories = len(categories)
+        categories_dict = sorted_data[categories_key]['categories']
+        categories_list = list(categories_dict.items())
+        total_categories = len(categories_list)
         columns = 1 if total_categories <= 5 else 2
 
-        main_layout = QVBoxLayout()
-
         if columns == 1:
+            main_layout = QHBoxLayout()
+
+            pie_chart = PieChartWidget(categories_dict)
+            pie_chart.setStyleSheet("background: transparent;")
+            main_layout.addWidget(pie_chart)
+
             v_layout = QVBoxLayout()
             v_layout.setSpacing(4)
-
-            for name, data in categories:
+            for name, data in categories_list:
                 v_layout.addWidget(CategoryWidget(name, data['sum']))
-
             v_layout.addStretch()
+
             main_layout.addLayout(v_layout)
         else:
+            main_layout = QVBoxLayout()
             v_layout1 = QVBoxLayout()
             v_layout1.setSpacing(4)
             v_layout2 = QVBoxLayout()
             v_layout2.setSpacing(4)
             half = (total_categories + 1) // 2
 
-            for i, (name, data) in enumerate(categories):
+            for i, (name, data) in enumerate(categories_list):
                 if i < half:
                     v_layout1.addWidget(CategoryWidget(name, data['sum']))
                 else:
@@ -264,3 +270,125 @@ class CategoryWidget(QWidget):
             color: #c8fafa;
             padding-right: 4px;
         ''')
+
+
+class PieChartWidget(QWidget):
+    def __init__(self, categories_data, parent=None):
+        super().__init__(parent)
+        self.categories = categories_data
+        self.total_amount = sum(data['sum'] for data in categories_data.values())
+        self.setMinimumSize(200, 200)
+
+        layout = QVBoxLayout()
+        layout.addWidget(
+            PieChartDrawingWidget(categories_data, self.total_amount)
+        )
+        self.setLayout(layout)
+
+
+class PieChartDrawingWidget(QWidget):
+    MIN_SEGMENT_ANGLE = 9
+
+    def __init__(self, categories_data, total_amount, parent=None):
+        super().__init__(parent)
+        self.categories = categories_data
+        self.total_amount = total_amount
+        self.setMaximumSize(200, 200)
+        self.colors = [
+            QColor(100, 200, 200),
+            QColor(200, 150, 100),
+            QColor(150, 200, 150),
+            QColor(200, 100, 150),
+            QColor(150, 150, 200),
+            QColor(200, 200, 100),
+            QColor(100, 150, 200),
+            QColor(200, 100, 100),
+        ]
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        size = min(self.width(), self.height()) - 40
+        rect = QRectF(
+            (self.width() - size) / 2,
+            (self.height() - size) / 2,
+            size, size
+        )
+        # Сначала вычисляем общее количество "маленьких" сегментов
+        sorted_categories = sorted(
+            self.categories.items(),
+            key=lambda item: item[1]['sum'],
+            reverse=True
+        )
+        # Вычисляем сколько градусов займут все минимальные сегменты
+        small_segments_count = sum(
+            1 for _, data in sorted_categories
+            if data['sum'] / self.total_amount < 0.03
+        )
+        total_min_angles = small_segments_count * self.MIN_SEGMENT_ANGLE
+        # Вычисляем сколько градусов останется для нормальных сегментов
+        remaining_angle = 360 - total_min_angles
+        remaining_total = sum(
+            data['sum'] for _, data in sorted_categories
+            if data['sum'] / self.total_amount >= 0.03
+        )
+
+        start_angle = 0
+        color_index = 0
+
+        sorted_categories = sorted(
+            self.categories.items(),
+            key=lambda item: item[1]['sum'],
+            reverse=True
+        )
+
+        for _, data in sorted_categories:
+            percentage = data['sum'] / self.total_amount
+            if percentage < 0.03:
+                span_angle = self.MIN_SEGMENT_ANGLE
+            else:
+                span_angle = (data['sum'] / remaining_total) * remaining_angle
+
+            color = self.colors[color_index % len(self.colors)]
+            painter.setBrush(QBrush(color))
+            painter.setPen(QPen(Qt.black, 1))
+            painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
+
+            middle_angle = start_angle + span_angle / 2
+            radian = math.radians(middle_angle)
+            label_radius = size / 2 + 15
+            x = rect.center().x() + label_radius * math.cos(radian)
+            y = rect.center().y() + label_radius * math.sin(radian)
+
+            label = f'{percentage:.1%}'
+            painter.setPen(QPen(Qt.white))
+            font = QFont('Roboto', 8)
+            font.setBold(True)
+            painter.setFont(font)
+
+            text_rect = painter.boundingRect(QRectF(), Qt.AlignCenter, label)
+            text_rect.moveCenter(QPointF(x, y))
+            painter.drawText(text_rect, Qt.AlignCenter, label)
+
+            start_angle += span_angle
+            color_index += 1
+
+        center_size = size / 1.5
+        center_rect = QRectF(
+            rect.center().x() - center_size/2,
+            rect.center().y() - center_size/2,
+            center_size, center_size
+        )
+        painter.setBrush(QBrush(QColor(50, 70, 70)))
+        painter.drawEllipse(center_rect)
+
+        font = QFont('Roboto', 10)
+        font.setBold(True)
+        painter.setFont(font)
+        painter.setPen(QPen(Qt.white))
+        painter.drawText(
+            center_rect,
+            Qt.AlignCenter,
+            f'{int(self.total_amount)} ₽'
+        )
