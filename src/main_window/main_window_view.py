@@ -3,7 +3,8 @@ import math
 import os
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QBrush, QColor, QFont, QIcon, QPainter, QPen, QPixmap, QRadialGradient
+from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
+                           QRadialGradient)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
                                QLabel, QMainWindow, QMessageBox,
                                QStyledItemDelegate, QVBoxLayout, QWidget)
@@ -276,7 +277,9 @@ class PieChartWidget(QWidget):
     def __init__(self, categories_data, parent=None):
         super().__init__(parent)
         self.categories = categories_data
-        self.total_amount = sum(data['sum'] for data in categories_data.values())
+        self.total_amount = sum(
+            data['sum'] for data in categories_data.values()
+        )
         self.setMinimumSize(200, 200)
 
         layout = QVBoxLayout()
@@ -287,7 +290,8 @@ class PieChartWidget(QWidget):
 
 
 class PieChartDrawingWidget(QWidget):
-    MIN_SEGMENT_ANGLE = 10.8
+    MIN_SEGMENT_ANGLE = 25.2
+    MIN_PERCENTAGE = 0.07
 
     def __init__(self, categories_data, total_amount, parent=None):
         super().__init__(parent)
@@ -361,27 +365,36 @@ class PieChartDrawingWidget(QWidget):
         )
 
     def _paint_pie_chart(self, painter: QPainter, rect: QRectF) -> None:
-        """Отрисовывает основную круговую диаграмму"""
+        """Отрисовывает основную круговую диаграмму с сохранением скруглений"""
         sorted_categories = self._get_sorted_categories()
         remaining_angle, remaining_total = self._calculate_angles(
             sorted_categories
         )
 
         start_angle = 0
+        segment_data = []
         for color_index, (_, data) in enumerate(sorted_categories):
             percentage = data['sum'] / self.total_amount
             span_angle = self._calculate_span_angle(
                 percentage, remaining_angle, remaining_total
             )
 
-            self._draw_pie_segment(
-                painter, rect, start_angle, span_angle, color_index
+            segment_data.append(
+                (start_angle, span_angle, color_index, percentage)
             )
+
+            color = self.colors[color_index % len(self.colors)]
+            painter.setBrush(QBrush(color))
+            painter.setPen(QPen(Qt.NoPen))
+            painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
+
+            start_angle += span_angle
+
+        for start_angle, span_angle, color_index, percentage in segment_data:
+            self._draw_rounded_edge(painter, rect, start_angle, color_index)
             self._draw_segment_label(
                 painter, rect, start_angle, span_angle, percentage
             )
-
-            start_angle += span_angle
 
     def _get_sorted_categories(self) -> list:
         """Возвращает категории, отсортированные по убыванию суммы"""
@@ -395,13 +408,13 @@ class PieChartDrawingWidget(QWidget):
         """Вычисляет оставшиеся углы для нормальных сегментов"""
         small_segments_count = sum(
             1 for _, data in sorted_categories
-            if data['sum'] / self.total_amount < 0.03
+            if data['sum'] / self.total_amount < self.MIN_PERCENTAGE
         )
         total_min_angles = small_segments_count * self.MIN_SEGMENT_ANGLE
         remaining_angle = 360 - total_min_angles
         remaining_total = sum(
             data['sum'] for _, data in sorted_categories
-            if data['sum'] / self.total_amount >= 0.03
+            if data['sum'] / self.total_amount >= self.MIN_PERCENTAGE
         )
         return remaining_angle, remaining_total
 
@@ -409,25 +422,44 @@ class PieChartDrawingWidget(QWidget):
         self, percentage: float, remaining_angle: float, remaining_total: float
     ) -> float:
         """Вычисляет угол сегмента"""
-        if percentage < 0.03:
+        if percentage < self.MIN_PERCENTAGE:
             return self.MIN_SEGMENT_ANGLE
         return (
             percentage * self.total_amount / remaining_total
         ) * remaining_angle
 
-    def _draw_pie_segment(
+    def _draw_rounded_edge(
         self,
         painter: QPainter,
         rect: QRectF,
         start_angle: float,
-        span_angle: float,
         color_index: int
     ) -> None:
-        """Отрисовывает сегмент диаграммы"""
+        """Отрисовывает скругление для начального края сегмента"""
         color = self.colors[color_index % len(self.colors)]
+        corner_radius = 12
+
+        center = rect.center()
+        radius = rect.width() / 2
+
+        start_rad = math.radians(start_angle)
+        start_point = QPointF(
+            center.x() + radius * math.cos(start_rad),
+            center.y() - radius * math.sin(start_rad)
+        )
+        direction = start_point - center
+        length = math.sqrt(direction.x()**2 + direction.y()**2)
+
+        if length == 0:
+            return
+
+        direction /= length
+
+        corner_center = start_point - direction * corner_radius
+
         painter.setBrush(QBrush(color))
         painter.setPen(QPen(Qt.NoPen))
-        painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
+        painter.drawEllipse(corner_center, corner_radius, corner_radius)
 
     def _draw_segment_label(
         self,
