@@ -163,6 +163,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         self.clear_category_widgets(frame)
         categories_key = 'income' if frame_type == 'income' else 'outcome'
         categories_dict = sorted_data[categories_key]['categories']
+        total_amount: int = sorted_data[categories_key]['total']
         categories_list = list(categories_dict.items())
         total_categories = len(categories_list)
         columns = 1 if total_categories <= 5 else 2
@@ -170,8 +171,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         if columns == 1:
             main_layout = QHBoxLayout()
 
-            pie_chart = PieChartWidget(categories_dict)
-            pie_chart.setStyleSheet("background: transparent;")
+            pie_chart = PieChartWidget(categories_dict, total_amount)
             main_layout.addWidget(pie_chart)
 
             v_layout = QVBoxLayout()
@@ -182,7 +182,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
 
             main_layout.addLayout(v_layout)
         else:
-            main_layout = QVBoxLayout()
+            main_layout = QHBoxLayout()
+            pie_chart = PieChartWidget(categories_dict, total_amount)
+            main_layout.addWidget(pie_chart)
             v_layout1 = QVBoxLayout()
             v_layout1.setSpacing(4)
             v_layout2 = QVBoxLayout()
@@ -274,12 +276,10 @@ class CategoryWidget(QWidget):
 
 
 class PieChartWidget(QWidget):
-    def __init__(self, categories_data, parent=None):
+    def __init__(self, categories_data: dict, total_amount: int, parent=None):
         super().__init__(parent)
         self.categories = categories_data
-        self.total_amount = sum(
-            data['sum'] for data in categories_data.values()
-        )
+        self.total_amount = total_amount
         self.setMinimumSize(200, 200)
 
         layout = QVBoxLayout()
@@ -342,8 +342,13 @@ class PieChartDrawingWidget(QWidget):
         )
 
         glow_colors = [
-            (0.0, 100), (0.5, 90), (0.6, 80),
-            (0.7, 70), (0.8, 60), (0.9, 50), (1.0, 5)
+            (0.0, 100),
+            (0.5, 90),
+            (0.6, 80),
+            (0.7, 70),
+            (0.8, 60),
+            (0.9, 50),
+            (1.0, 5)
         ]
 
         for pos, alpha in glow_colors:
@@ -400,7 +405,7 @@ class PieChartDrawingWidget(QWidget):
         """Возвращает категории, отсортированные по убыванию суммы"""
         return sorted(
             self.categories.items(),
-            key=lambda item: item[1]['sum'],
+            key=lambda item: abs(item[1]['sum']),
             reverse=True
         )
 
@@ -480,7 +485,6 @@ class PieChartDrawingWidget(QWidget):
 
         label = f'{percentage:.1%}'
         text_rect = self._create_label_text(painter, label, x, y)
-        self._draw_label_background(painter, text_rect)
         self._draw_label_text(painter, text_rect, label)
 
     def _create_label_text(
@@ -496,20 +500,11 @@ class PieChartDrawingWidget(QWidget):
         text_rect.moveCenter(QPointF(x, y))
         return text_rect
 
-    def _draw_label_background(
-        self, painter: QPainter, text_rect: QRectF
-    ) -> None:
-        """Отрисовывает фон для подписи"""
-        bg_rect = text_rect.adjusted(-2, -2, 2, 2)
-        painter.setBrush(QBrush(QColor(18, 18, 18)))
-        painter.setPen(QPen(Qt.NoPen))
-        painter.drawRoundedRect(bg_rect, 3, 3)
-
     def _draw_label_text(
         self, painter: QPainter, text_rect: QRectF, text: str
     ) -> None:
         """Отрисовывает текст подписи"""
-        painter.setPen(QPen(Qt.white))
+        painter.setPen(QPen(QColor('#c8fafa')))
         painter.drawText(text_rect, Qt.AlignCenter, text)
 
     def _paint_center(
@@ -549,5 +544,5 @@ class PieChartDrawingWidget(QWidget):
         font = QFont('Roboto', 10)
         font.setBold(True)
         painter.setFont(font)
-        painter.setPen(QPen(Qt.white))
+        painter.setPen(QPen(QColor('#c8fafa')))
         painter.drawText(rect, Qt.AlignCenter, f'{int(self.total_amount)} ₽')
