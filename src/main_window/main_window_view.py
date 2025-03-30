@@ -287,13 +287,14 @@ class PieChartWidget(QWidget):
 
 
 class PieChartDrawingWidget(QWidget):
-    MIN_SEGMENT_ANGLE = 9
+    MIN_SEGMENT_ANGLE = 10.8
 
     def __init__(self, categories_data, total_amount, parent=None):
         super().__init__(parent)
         self.categories = categories_data
         self.total_amount = total_amount
-        self.setMaximumSize(200, 200)
+        self.setMinimumSize(200, 200)
+        self.setMaximumSize(255, 255)
         self.colors = [
             QColor(100, 200, 200),
             QColor(200, 150, 100),
@@ -309,39 +310,32 @@ class PieChartDrawingWidget(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        size = min(self.width(), self.height()) - 40
+        size = min(self.width(), self.height()) - 55
         rect = QRectF(
             (self.width() - size) / 2,
             (self.height() - size) / 2,
             size, size
         )
-        # Сначала вычисляем общее количество "маленьких" сегментов
+
+        # Вычисление углов
         sorted_categories = sorted(
             self.categories.items(),
             key=lambda item: item[1]['sum'],
             reverse=True
         )
-        # Вычисляем сколько градусов займут все минимальные сегменты
         small_segments_count = sum(
             1 for _, data in sorted_categories
             if data['sum'] / self.total_amount < 0.03
         )
         total_min_angles = small_segments_count * self.MIN_SEGMENT_ANGLE
-        # Вычисляем сколько градусов останется для нормальных сегментов
         remaining_angle = 360 - total_min_angles
         remaining_total = sum(
             data['sum'] for _, data in sorted_categories
             if data['sum'] / self.total_amount >= 0.03
         )
 
-        start_angle = 0
+        start_angle = 0  # Qt: 0° = 3 часа, по часовой стрелке
         color_index = 0
-
-        sorted_categories = sorted(
-            self.categories.items(),
-            key=lambda item: item[1]['sum'],
-            reverse=True
-        )
 
         for _, data in sorted_categories:
             percentage = data['sum'] / self.total_amount
@@ -355,12 +349,25 @@ class PieChartDrawingWidget(QWidget):
             painter.setPen(QPen(Qt.black, 1))
             painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
 
+            # ПРОСТОЙ И НАДЕЖНЫЙ РАСЧЕТ ПОЗИЦИИ:
+            # 1. Получаем средний угол в системе Qt (0°=3ч, по часовой)
             middle_angle = start_angle + span_angle / 2
-            radian = math.radians(middle_angle)
-            label_radius = size / 2 + 15
-            x = rect.center().x() + label_radius * math.cos(radian)
-            y = rect.center().y() + label_radius * math.sin(radian)
+            
+            # 2. Конвертируем в обычные градусы (0°=12ч, против часовой)
+            normal_angle = (360 - middle_angle + 90) % 360
+            
+            # 3. Вычисляем позицию на окружности
+            label_radius = size / 2 + 20
+            radian = math.radians(normal_angle)
+            x = rect.center().x() + label_radius * math.sin(radian)
+            y = rect.center().y() - label_radius * math.cos(radian)
+            
+            print(f"Segment: {percentage:.1%} | "
+                f"Qt Angle: {middle_angle:.1f}° | "
+                f"Normal Angle: {normal_angle:.1f}° | "
+                f"Position: ({x:.1f}, {y:.1f})")
 
+            # 4. Рисуем подпись
             label = f'{percentage:.1%}'
             painter.setPen(QPen(Qt.white))
             font = QFont('Roboto', 8)
@@ -369,11 +376,20 @@ class PieChartDrawingWidget(QWidget):
 
             text_rect = painter.boundingRect(QRectF(), Qt.AlignCenter, label)
             text_rect.moveCenter(QPointF(x, y))
+
+            # Фон для читаемости
+            bg_rect = text_rect.adjusted(-2, -2, 2, 2)
+            painter.setBrush(QBrush(QColor(0, 0, 0, 150)))
+            painter.setPen(QPen(Qt.NoPen))
+            painter.drawRoundedRect(bg_rect, 3, 3)
+            
+            painter.setPen(QPen(Qt.white))
             painter.drawText(text_rect, Qt.AlignCenter, label)
 
             start_angle += span_angle
             color_index += 1
 
+        # Центральный круг
         center_size = size / 1.5
         center_rect = QRectF(
             rect.center().x() - center_size/2,
