@@ -3,7 +3,7 @@ import math
 import os
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QBrush, QColor, QFont, QIcon, QPainter, QPen, QPixmap
+from PySide6.QtGui import QBrush, QColor, QFont, QIcon, QPainter, QPen, QPixmap, QRadialGradient
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
                                QLabel, QMainWindow, QMessageBox,
                                QStyledItemDelegate, QVBoxLayout, QWidget)
@@ -296,33 +296,103 @@ class PieChartDrawingWidget(QWidget):
         self.setMinimumSize(200, 200)
         self.setMaximumSize(255, 255)
         self.colors = [
-            QColor(100, 200, 200),
-            QColor(200, 150, 100),
-            QColor(150, 200, 150),
-            QColor(200, 100, 150),
-            QColor(150, 150, 200),
+            QColor('#4FC5DF'),
+            QColor('#77E1A1'),
+            QColor('#FFB473'),
+            QColor('#FD788B'),
+            QColor('#8382F7'),
             QColor(200, 200, 100),
             QColor(100, 150, 200),
-            QColor(200, 100, 100),
+            QColor('#B3CDDA'),
         ]
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        size = min(self.width(), self.height()) - 55
-        rect = QRectF(
+        base_rect = self._setup_base_geometry()
+        self._paint_glow_effect(painter, base_rect)
+
+        diagram_rect = self._calculate_diagram_rect(base_rect)
+        self._paint_pie_chart(painter, diagram_rect)
+
+        self._paint_center(painter, diagram_rect)
+
+    def _setup_base_geometry(self) -> QRectF:
+        """Вычисляет базовую геометрию диаграммы с учетом свечения"""
+        glow_size = 3
+        size = min(self.width(), self.height()) - 55 - glow_size * 2
+        return QRectF(
             (self.width() - size) / 2,
             (self.height() - size) / 2,
             size, size
         )
 
-        # Вычисление углов
-        sorted_categories = sorted(
+    def _paint_glow_effect(self, painter: QPainter, base_rect: QRectF) -> None:
+        """Отрисовывает эффект свечения вокруг диаграммы"""
+        glow_size = 3
+        glow_gradient = QRadialGradient(
+            base_rect.center(),
+            base_rect.width()/2 + glow_size,
+            base_rect.center()
+        )
+
+        glow_colors = [
+            (0.0, 100), (0.5, 90), (0.6, 80),
+            (0.7, 70), (0.8, 60), (0.9, 50), (1.0, 5)
+        ]
+
+        for pos, alpha in glow_colors:
+            glow_gradient.setColorAt(pos, QColor(200, 250, 250, alpha))
+
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(glow_gradient))
+        painter.drawEllipse(
+            base_rect.adjusted(
+                -glow_size, -glow_size, glow_size, glow_size
+            )
+        )
+
+    def _calculate_diagram_rect(self, base_rect: QRectF) -> QRectF:
+        """Вычисляет область для отрисовки основной диаграммы"""
+        glow_size = 3
+        return base_rect.adjusted(
+            glow_size/4, glow_size/4, -glow_size/4, -glow_size/4
+        )
+
+    def _paint_pie_chart(self, painter: QPainter, rect: QRectF) -> None:
+        """Отрисовывает основную круговую диаграмму"""
+        sorted_categories = self._get_sorted_categories()
+        remaining_angle, remaining_total = self._calculate_angles(
+            sorted_categories
+        )
+
+        start_angle = 0
+        for color_index, (_, data) in enumerate(sorted_categories):
+            percentage = data['sum'] / self.total_amount
+            span_angle = self._calculate_span_angle(
+                percentage, remaining_angle, remaining_total
+            )
+
+            self._draw_pie_segment(
+                painter, rect, start_angle, span_angle, color_index
+            )
+            self._draw_segment_label(
+                painter, rect, start_angle, span_angle, percentage
+            )
+
+            start_angle += span_angle
+
+    def _get_sorted_categories(self) -> list:
+        """Возвращает категории, отсортированные по убыванию суммы"""
+        return sorted(
             self.categories.items(),
             key=lambda item: item[1]['sum'],
             reverse=True
         )
+
+    def _calculate_angles(self, sorted_categories: list) -> tuple:
+        """Вычисляет оставшиеся углы для нормальных сегментов"""
         small_segments_count = sum(
             1 for _, data in sorted_categories
             if data['sum'] / self.total_amount < 0.03
@@ -333,78 +403,119 @@ class PieChartDrawingWidget(QWidget):
             data['sum'] for _, data in sorted_categories
             if data['sum'] / self.total_amount >= 0.03
         )
+        return remaining_angle, remaining_total
 
-        start_angle = 0  # Qt: 0° = 3 часа, по часовой стрелке
-        color_index = 0
+    def _calculate_span_angle(
+        self, percentage: float, remaining_angle: float, remaining_total: float
+    ) -> float:
+        """Вычисляет угол сегмента"""
+        if percentage < 0.03:
+            return self.MIN_SEGMENT_ANGLE
+        return (
+            percentage * self.total_amount / remaining_total
+        ) * remaining_angle
 
-        for _, data in sorted_categories:
-            percentage = data['sum'] / self.total_amount
-            if percentage < 0.03:
-                span_angle = self.MIN_SEGMENT_ANGLE
-            else:
-                span_angle = (data['sum'] / remaining_total) * remaining_angle
+    def _draw_pie_segment(
+        self,
+        painter: QPainter,
+        rect: QRectF,
+        start_angle: float,
+        span_angle: float,
+        color_index: int
+    ) -> None:
+        """Отрисовывает сегмент диаграммы"""
+        color = self.colors[color_index % len(self.colors)]
+        painter.setBrush(QBrush(color))
+        painter.setPen(QPen(Qt.NoPen))
+        painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
 
-            color = self.colors[color_index % len(self.colors)]
-            painter.setBrush(QBrush(color))
-            painter.setPen(QPen(Qt.black, 1))
-            painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
+    def _draw_segment_label(
+        self,
+        painter: QPainter,
+        rect: QRectF,
+        start_angle: float,
+        span_angle: float,
+        percentage: float
+    ) -> None:
+        """Отрисовывает подпись для сегмента"""
+        middle_angle = start_angle + span_angle / 2
+        normal_angle = (360 - middle_angle + 90) % 360
+        label_radius = rect.width() / 2 + 18
 
-            # ПРОСТОЙ И НАДЕЖНЫЙ РАСЧЕТ ПОЗИЦИИ:
-            # 1. Получаем средний угол в системе Qt (0°=3ч, по часовой)
-            middle_angle = start_angle + span_angle / 2
-            
-            # 2. Конвертируем в обычные градусы (0°=12ч, против часовой)
-            normal_angle = (360 - middle_angle + 90) % 360
-            
-            # 3. Вычисляем позицию на окружности
-            label_radius = size / 2 + 20
-            radian = math.radians(normal_angle)
-            x = rect.center().x() + label_radius * math.sin(radian)
-            y = rect.center().y() - label_radius * math.cos(radian)
-            
-            print(f"Segment: {percentage:.1%} | "
-                f"Qt Angle: {middle_angle:.1f}° | "
-                f"Normal Angle: {normal_angle:.1f}° | "
-                f"Position: ({x:.1f}, {y:.1f})")
+        radian = math.radians(normal_angle)
+        x = rect.center().x() + label_radius * math.sin(radian)
+        y = rect.center().y() - label_radius * math.cos(radian)
 
-            # 4. Рисуем подпись
-            label = f'{percentage:.1%}'
-            painter.setPen(QPen(Qt.white))
-            font = QFont('Roboto', 8)
-            font.setBold(True)
-            painter.setFont(font)
+        label = f'{percentage:.1%}'
+        text_rect = self._create_label_text(painter, label, x, y)
+        self._draw_label_background(painter, text_rect)
+        self._draw_label_text(painter, text_rect, label)
 
-            text_rect = painter.boundingRect(QRectF(), Qt.AlignCenter, label)
-            text_rect.moveCenter(QPointF(x, y))
+    def _create_label_text(
+        self, painter: QPainter, text: str, x: float, y: float
+    ) -> QRectF:
+        """Создает прямоугольник для текста подписи"""
+        painter.setPen(QPen(Qt.white))
+        font = QFont('Roboto', 8)
+        font.setBold(True)
+        painter.setFont(font)
 
-            # Фон для читаемости
-            bg_rect = text_rect.adjusted(-2, -2, 2, 2)
-            painter.setBrush(QBrush(QColor(0, 0, 0, 150)))
-            painter.setPen(QPen(Qt.NoPen))
-            painter.drawRoundedRect(bg_rect, 3, 3)
-            
-            painter.setPen(QPen(Qt.white))
-            painter.drawText(text_rect, Qt.AlignCenter, label)
+        text_rect = painter.boundingRect(QRectF(), Qt.AlignCenter, text)
+        text_rect.moveCenter(QPointF(x, y))
+        return text_rect
 
-            start_angle += span_angle
-            color_index += 1
+    def _draw_label_background(
+        self, painter: QPainter, text_rect: QRectF
+    ) -> None:
+        """Отрисовывает фон для подписи"""
+        bg_rect = text_rect.adjusted(-2, -2, 2, 2)
+        painter.setBrush(QBrush(QColor(18, 18, 18)))
+        painter.setPen(QPen(Qt.NoPen))
+        painter.drawRoundedRect(bg_rect, 3, 3)
 
-        # Центральный круг
-        center_size = size / 1.5
+    def _draw_label_text(
+        self, painter: QPainter, text_rect: QRectF, text: str
+    ) -> None:
+        """Отрисовывает текст подписи"""
+        painter.setPen(QPen(Qt.white))
+        painter.drawText(text_rect, Qt.AlignCenter, text)
+
+    def _paint_center(
+        self, painter: QPainter, rect: QRectF
+    ) -> None:
+        """Отрисовывает внутренний круг"""
+        center_size = rect.width() / 1.5
         center_rect = QRectF(
-            rect.center().x() - center_size/2,
-            rect.center().y() - center_size/2,
+            rect.center().x() - center_size / 2,
+            rect.center().y() - center_size / 2,
             center_size, center_size
         )
-        painter.setBrush(QBrush(QColor(50, 70, 70)))
+
+        gradient = QRadialGradient(
+            center_rect.center(),
+            center_size / 2,
+            center_rect.center()
+        )
+        self._setup_center_gradient(gradient)
+
+        painter.setBrush(QBrush(gradient))
+        painter.setPen(QPen(Qt.NoPen))
         painter.drawEllipse(center_rect)
 
+        self._draw_center_text(painter, center_rect)
+
+    def _setup_center_gradient(self, gradient: QRadialGradient) -> None:
+        """Настраивает градиент для центрального круга"""
+        gradient.setColorAt(0.0, QColor(18, 18, 18))
+        for i in range(1, 21):
+            pos = i * 0.05
+            color_val = 18 + min(i + 1, 14)
+            gradient.setColorAt(pos, QColor(color_val, color_val, color_val))
+
+    def _draw_center_text(self, painter: QPainter, rect: QRectF) -> None:
+        """Отрисовывает текст в центре"""
         font = QFont('Roboto', 10)
         font.setBold(True)
         painter.setFont(font)
         painter.setPen(QPen(Qt.white))
-        painter.drawText(
-            center_rect,
-            Qt.AlignCenter,
-            f'{int(self.total_amount)} ₽'
-        )
+        painter.drawText(rect, Qt.AlignCenter, f'{int(self.total_amount)} ₽')
