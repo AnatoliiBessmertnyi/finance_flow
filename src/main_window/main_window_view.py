@@ -170,19 +170,21 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
 
         if columns == 1:
             main_layout = QHBoxLayout()
+            main_layout.setSpacing(4)
 
             pie_chart = PieChartWidget(categories_dict, total_amount)
             main_layout.addWidget(pie_chart)
 
             v_layout = QVBoxLayout()
             v_layout.setSpacing(4)
-            for name, data in categories_list:
-                v_layout.addWidget(CategoryWidget(name, data['sum']))
+            for i, (name, data) in enumerate(categories_list):
+                v_layout.addWidget(CategoryWidget(name, data['sum'], i))
             v_layout.addStretch()
 
             main_layout.addLayout(v_layout)
         else:
             main_layout = QHBoxLayout()
+            main_layout.setSpacing(4)
             pie_chart = PieChartWidget(categories_dict, total_amount)
             main_layout.addWidget(pie_chart)
             v_layout1 = QVBoxLayout()
@@ -193,9 +195,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
 
             for i, (name, data) in enumerate(categories_list):
                 if i < half:
-                    v_layout1.addWidget(CategoryWidget(name, data['sum']))
+                    v_layout1.addWidget(CategoryWidget(name, data['sum'], i))
                 else:
-                    v_layout2.addWidget(CategoryWidget(name, data['sum']))
+                    v_layout2.addWidget(CategoryWidget(name, data['sum'], i))
 
             v_layout1.addStretch()
             v_layout2.addStretch()
@@ -229,16 +231,29 @@ class CenterAlignDelegate(QStyledItemDelegate):
 
 
 class CategoryWidget(QWidget):
-    def __init__(self, name: str, amount: int, parent=None):
+    COLORS = [
+        '#4FC5DF',
+        '#77E1A1',
+        '#FFB473',
+        '#FD788B',
+        '#8382F7',
+        '#FFD166',
+        '#50C9CE',
+        '#B3CDDA'
+    ]
+
+    def __init__(
+        self, name: str, amount: int, color_index: int = 0, parent=None
+    ):
         super().__init__(parent)
         self.name = name
         self.amount = amount
+        self.color_index = color_index
         self.setup_ui()
         self.setup_style()
 
     def setup_ui(self):
         self.icon = QLabel()
-        self.icon.setText('icon')
         self.icon.setFixedSize(24, 24)
 
         self.name_label = QLabel(self.name)
@@ -250,13 +265,22 @@ class CategoryWidget(QWidget):
         self.amount_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
         container = QHBoxLayout()
+        container.setSpacing(4)
         container.addWidget(self.icon)
         container.addWidget(self.name_label)
         container.addWidget(self.amount_label)
-
         self.setLayout(container)
 
     def setup_style(self):
+        base_color = self.COLORS[self.color_index % len(self.COLORS)]
+        self.icon.setStyleSheet(f"""
+            background-color: {base_color};
+            border-radius: 12px;
+            min-width: 24px;
+            max-width: 24px;
+            min-height: 24px;
+            max-height: 24px;
+        """)
         self.name_label.setStyleSheet('''
             background-color: rgba(255, 255, 255, 20);
             border: 1px solid  rgba(255, 255, 255, 30);
@@ -280,9 +304,10 @@ class PieChartWidget(QWidget):
         super().__init__(parent)
         self.categories = categories_data
         self.total_amount = total_amount
-        self.setMinimumSize(200, 200)
+        self.setFixedSize(200, 200)
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(
             PieChartDrawingWidget(categories_data, self.total_amount)
         )
@@ -297,16 +322,15 @@ class PieChartDrawingWidget(QWidget):
         super().__init__(parent)
         self.categories = categories_data
         self.total_amount = total_amount
-        self.setMinimumSize(200, 200)
-        self.setMaximumSize(255, 255)
+        self.setFixedSize(200, 200)
         self.colors = [
             QColor('#4FC5DF'),
             QColor('#77E1A1'),
             QColor('#FFB473'),
             QColor('#FD788B'),
             QColor('#8382F7'),
-            QColor(200, 200, 100),
-            QColor(100, 150, 200),
+            QColor('#FFD166'),
+            QColor('#50C9CE'),
             QColor('#B3CDDA'),
         ]
 
@@ -504,7 +528,7 @@ class PieChartDrawingWidget(QWidget):
         self, painter: QPainter, text_rect: QRectF, text: str
     ) -> None:
         """Отрисовывает текст подписи"""
-        painter.setPen(QPen(QColor('#c8fafa')))
+        painter.setPen(QPen(QColor('#d1f7f7')))
         painter.drawText(text_rect, Qt.AlignCenter, text)
 
     def _paint_center(
