@@ -170,6 +170,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
 
         if columns == 1:
             main_layout = QHBoxLayout()
+            main_layout.setContentsMargins(0, 0, 0, 0)
             main_layout.setSpacing(4)
 
             pie_chart = PieChartWidget(categories_dict, total_amount)
@@ -177,6 +178,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
 
             v_layout = QVBoxLayout()
             v_layout.setSpacing(4)
+            v_layout.addStretch()
             for i, (name, data) in enumerate(categories_list):
                 v_layout.addWidget(CategoryWidget(name, data['sum'], i))
             v_layout.addStretch()
@@ -184,13 +186,16 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
             main_layout.addLayout(v_layout)
         else:
             main_layout = QHBoxLayout()
+            main_layout.setContentsMargins(0, 0, 0, 0)
             main_layout.setSpacing(4)
             pie_chart = PieChartWidget(categories_dict, total_amount)
             main_layout.addWidget(pie_chart)
             v_layout1 = QVBoxLayout()
             v_layout1.setSpacing(4)
+            v_layout1.addStretch()
             v_layout2 = QVBoxLayout()
             v_layout2.setSpacing(4)
+            v_layout2.addStretch()
             half = (total_categories + 1) // 2
 
             for i, (name, data) in enumerate(categories_list):
