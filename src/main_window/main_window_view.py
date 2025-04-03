@@ -1,10 +1,11 @@
 import ctypes
 import math
 import os
+from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
-                           QRadialGradient)
+                           QRadialGradient, QPixmap)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
                                QLabel, QLayout, QMainWindow, QMessageBox,
                                QStyledItemDelegate, QVBoxLayout, QWidget)
@@ -251,13 +252,21 @@ class CategoryWidget(QWidget):
     COLORS = [
         '#4FC5DF',
         '#77E1A1',
+        '#FFD166',
         '#FFB473',
         '#FD788B',
         '#8382F7',
-        '#FFD166',
-        '#50C9CE',
+        '#9DACE9',
         '#B3CDDA'
     ]
+    DEFAULT_CATEGORIES = {
+        'Жилье': 'home.svg',
+        'Продукты': 'fastfood.svg',
+        'Развлечения': 'game.svg',
+        'Транспорт': 'bus.svg',
+        'Другое': 'more.svg'
+    }
+    DEFAULT_ICON = 'lan.svg'
 
     def __init__(
         self, name: str, amount: int, color_index: int = 0, parent=None
@@ -271,7 +280,8 @@ class CategoryWidget(QWidget):
 
     def setup_ui(self):
         self.icon = QLabel()
-        self.icon.setFixedSize(24, 24)
+        self.icon.setFixedSize(28, 28)
+        self.icon.setAlignment(Qt.AlignCenter)
 
         self.name_label = QLabel(self.name)
         self.name_label.setMinimumSize(100, 24)
@@ -292,11 +302,7 @@ class CategoryWidget(QWidget):
         base_color = self.COLORS[self.color_index % len(self.COLORS)]
         self.icon.setStyleSheet(f"""
             background-color: {base_color};
-            border-radius: 12px;
-            min-width: 24px;
-            max-width: 24px;
-            min-height: 24px;
-            max-height: 24px;
+            border-radius: 14px;
         """)
         self.name_label.setStyleSheet('''
             background-color: rgba(255, 255, 255, 20);
@@ -314,6 +320,20 @@ class CategoryWidget(QWidget):
             color: #c8fafa;
             padding-right: 4px;
         ''')
+        icon_path = self.get_icon_path()
+        if icon_path:
+            pixmap = QPixmap(icon_path).scaled(
+                20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation
+            )
+            self.icon.setPixmap(pixmap)
+
+    def get_icon_path(self) -> str | None:
+        """Возвращает путь к иконке для категории или None, если не найдена"""
+        icon_name = self.DEFAULT_CATEGORIES.get(self.name, self.DEFAULT_ICON)
+        icon_path = os.path.join('src', 'img', icon_name)
+
+        if os.path.exists(icon_path):
+            return icon_path
 
 
 class PieChartWidget(QWidget):
@@ -347,7 +367,7 @@ class PieChartDrawingWidget(QWidget):
             QColor('#FFB473'),
             QColor('#FD788B'),
             QColor('#8382F7'),
-            QColor('#9dace9'),
+            QColor('#9DACE9'),
             QColor('#B3CDDA'),
         ]
 
