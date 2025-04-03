@@ -6,7 +6,7 @@ from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
                            QRadialGradient)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
-                               QLabel, QMainWindow, QMessageBox,
+                               QLabel, QLayout, QMainWindow, QMessageBox,
                                QStyledItemDelegate, QVBoxLayout, QWidget)
 
 from src.main_window.ui.main_window_ui import Ui_MainWindow
@@ -165,59 +165,71 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         categories_dict = sorted_data[categories_key]['categories']
         total_amount: int = sorted_data[categories_key]['total']
         categories_list = list(categories_dict.items())
-        total_categories = len(categories_list)
-        columns = 1 if total_categories <= 5 else 2
-
-        if columns == 1:
-            main_layout = QHBoxLayout()
-            main_layout.setContentsMargins(0, 0, 0, 0)
-            main_layout.setSpacing(4)
-
-            pie_chart = PieChartWidget(categories_dict, total_amount)
-            main_layout.addWidget(pie_chart)
-
-            v_layout = QVBoxLayout()
-            v_layout.setSpacing(4)
-            v_layout.addStretch()
-            for i, (name, data) in enumerate(categories_list):
-                v_layout.addWidget(CategoryWidget(name, data['sum'], i))
-            v_layout.addStretch()
-
-            main_layout.addLayout(v_layout)
-        else:
-            main_layout = QHBoxLayout()
-            main_layout.setContentsMargins(0, 0, 0, 0)
-            main_layout.setSpacing(4)
-            pie_chart = PieChartWidget(categories_dict, total_amount)
-            main_layout.addWidget(pie_chart)
-            v_layout1 = QVBoxLayout()
-            v_layout1.setSpacing(4)
-            v_layout1.addStretch()
-            v_layout2 = QVBoxLayout()
-            v_layout2.setSpacing(4)
-            v_layout2.addStretch()
-            half = (total_categories + 1) // 2
-
-            for i, (name, data) in enumerate(categories_list):
-                if i < half:
-                    v_layout1.addWidget(CategoryWidget(name, data['sum'], i))
-                else:
-                    v_layout2.addWidget(CategoryWidget(name, data['sum'], i))
-
-            v_layout1.addStretch()
-            v_layout2.addStretch()
-
-            h_layout = QHBoxLayout()
-            h_layout.addLayout(v_layout1)
-            h_layout.addLayout(v_layout2)
-            h_layout.setSpacing(4)
-
-            main_layout.addLayout(h_layout)
+        main_category_container = self.create_main_category_container(
+            categories_dict, total_amount, categories_list
+        )
 
         if frame.layout():
             QWidget().setLayout(frame.layout())
 
-        frame.setLayout(main_layout)
+        frame.setLayout(main_category_container)
+
+    def create_main_category_container(
+        self, categories_dict: dict, total_amount: int, categories_list: list
+    ) -> QHBoxLayout:
+        """Создает основную разметку с диаграммой и категориями."""
+        main_layout = QHBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(4)
+
+        pie_chart = PieChartWidget(categories_dict, total_amount)
+        main_layout.addWidget(pie_chart)
+
+        categories_layout = self.create_categories_layout(categories_list)
+        main_layout.addLayout(categories_layout)
+
+        return main_layout
+
+    def create_categories_layout(self, categories_list: list) -> QLayout:
+        """Создает контейнер с одной или двумя колонками."""
+        if len(categories_list) <= 5:
+            return self.create_single_column(categories_list)
+        return self.create_multi_column(categories_list)
+
+    def create_single_column(self, categories_list: list) -> QVBoxLayout:
+        """Создает одноколоночную разметку."""
+        layout = QVBoxLayout()
+        layout.setSpacing(4)
+        layout.addStretch()
+
+        for i, (name, data) in enumerate(categories_list):
+            layout.addWidget(CategoryWidget(name, data['sum'], i))
+
+        layout.addStretch()
+        return layout
+
+    def create_multi_column(self, categories_list: list) -> QHBoxLayout:
+        """Создает многоколоночную разметку."""
+        half = (len(categories_list) + 1) // 2
+        layouts = [QVBoxLayout() for _ in range(2)]
+
+        for layout in layouts:
+            layout.setSpacing(4)
+            layout.addStretch()
+
+        for i, (name, data) in enumerate(categories_list):
+            layout_idx = 0 if i < half else 1
+            layouts[layout_idx].addWidget(CategoryWidget(name, data['sum'], i))
+
+        for layout in layouts:
+            layout.addStretch()
+
+        h_layout = QHBoxLayout()
+        h_layout.setSpacing(4)
+        h_layout.addLayout(layouts[0])
+        h_layout.addLayout(layouts[1])
+
+        return h_layout
 
     def clear_category_widgets(self, frame: QFrame) -> None:
         """Очистка фрейма."""
@@ -331,11 +343,11 @@ class PieChartDrawingWidget(QWidget):
         self.colors = [
             QColor('#4FC5DF'),
             QColor('#77E1A1'),
+            QColor('#FFD166'),
             QColor('#FFB473'),
             QColor('#FD788B'),
             QColor('#8382F7'),
-            QColor('#FFD166'),
-            QColor('#50C9CE'),
+            QColor('#9dace9'),
             QColor('#B3CDDA'),
         ]
 
