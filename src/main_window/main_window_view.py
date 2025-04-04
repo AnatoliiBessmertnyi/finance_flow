@@ -23,6 +23,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         self.setup_style()
         self.connect_signals()
         self.update_total_balance_styles()
+        self.setup_icon()
 
     def connect_signals(self):
         self.income_widget.mousePressEvent = (
@@ -98,6 +99,17 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         )
         app_icon = QIcon(icon_path)
         app.setWindowIcon(app_icon)
+
+    def setup_icon(self):
+        self.new_btn.setIcon(QIcon('src/img/add.svg'))
+        self.edit_btn.setIcon(QIcon('src/img/edit.svg'))
+        self.delete_btn.setIcon(QIcon('src/img/delete.svg'))
+        self.category_edit_btn.setText('')
+        self.category_edit_btn.setIcon(QIcon('src/img/add.svg'))
+        self.balance_icon.setPixmap(QPixmap('src/img/balance.svg'))
+        self.income_icon.setPixmap(QPixmap('src/img/income.svg'))
+        self.outcome_icon.setPixmap(QPixmap('src/img/outcome.svg'))
+
 
     def show_message(
         self, title: str, message: str, message_type: str = 'info'
@@ -261,12 +273,14 @@ class CategoryWidget(QWidget):
     ]
     DEFAULT_CATEGORIES = {
         'Жилье': 'home.svg',
-        'Продукты': 'fastfood.svg',
+        'Продукты': 'shopping_cart.svg',
         'Развлечения': 'game.svg',
         'Транспорт': 'bus.svg',
-        'Другое': 'more.svg'
+        'Другое': 'more.svg',
+        'Путешествия': 'travel.svg',
+        'Остальное': 'view_cozy.svg',
     }
-    DEFAULT_ICON = 'lan.svg'
+    UNKNOW_ICON = 'question.svg'
 
     def __init__(
         self, name: str, amount: int, color_index: int = 0, parent=None
@@ -329,7 +343,7 @@ class CategoryWidget(QWidget):
 
     def get_icon_path(self) -> str | None:
         """Возвращает путь к иконке для категории или None, если не найдена"""
-        icon_name = self.DEFAULT_CATEGORIES.get(self.name, self.DEFAULT_ICON)
+        icon_name = self.DEFAULT_CATEGORIES.get(self.name, self.UNKNOW_ICON)
         icon_path = os.path.join('src', 'img', icon_name)
 
         if os.path.exists(icon_path):

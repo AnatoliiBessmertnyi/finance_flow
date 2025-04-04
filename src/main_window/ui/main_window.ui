@@ -99,50 +99,86 @@ border-radius: 6px;</string>
              <string notr="true">background: transparent;
 border: none;</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
-              <number>6</number>
+              <number>0</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="balance_title_lbl">
-               <property name="styleSheet">
-                <string notr="true">color: #c8fafa;
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <property name="spacing">
+                  <number>4</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="balance_icon">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>24</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>24</width>
+                     <height>24</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Icon</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="balance_title_lbl">
+                   <property name="styleSheet">
+                    <string notr="true">color: #c8fafa;
 font-weight: bold;
 font-size: 18px;
 background-color: none;
 border: none;
 </string>
-               </property>
-               <property name="text">
-                <string>Текущий баланс</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="balance_lbl">
-               <property name="styleSheet">
-                <string notr="true">color: #c8fafa;
+                   </property>
+                   <property name="text">
+                    <string>Текущий баланс</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QLabel" name="balance_lbl">
+                 <property name="styleSheet">
+                  <string notr="true">color: #c8fafa;
 font-size: 28px;
 background-color: none;
 border: none;
 </string>
-               </property>
-               <property name="text">
-                <string>1000</string>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>1000</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
@@ -168,7 +204,7 @@ border: none;
              <item>
               <layout class="QHBoxLayout" name="outcome_container">
                <property name="spacing">
-                <number>0</number>
+                <number>4</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
@@ -256,7 +292,7 @@ border: none;
              <item>
               <layout class="QHBoxLayout" name="income_container">
                <property name="spacing">
-                <number>0</number>
+                <number>4</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
@@ -404,6 +440,12 @@ border: none;
               </property>
               <property name="text">
                <string>Edit</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
               </property>
              </widget>
             </item>

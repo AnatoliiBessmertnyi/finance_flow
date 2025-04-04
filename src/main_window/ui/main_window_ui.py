@@ -60,10 +60,27 @@ class Ui_MainWindow(object):
         self.total_widget.setObjectName(u"total_widget")
         self.total_widget.setStyleSheet(u"background: transparent;\n"
 "border: none;")
-        self.verticalLayout_6 = QVBoxLayout(self.total_widget)
-        self.verticalLayout_6.setSpacing(6)
+        self.verticalLayout_7 = QVBoxLayout(self.total_widget)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_6 = QVBoxLayout()
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 4, 0, 4)
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(4)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.balance_icon = QLabel(self.total_widget)
+        self.balance_icon.setObjectName(u"balance_icon")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.balance_icon.sizePolicy().hasHeightForWidth())
+        self.balance_icon.setSizePolicy(sizePolicy1)
+        self.balance_icon.setMinimumSize(QSize(24, 24))
+        self.balance_icon.setMaximumSize(QSize(24, 24))
+
+        self.horizontalLayout_2.addWidget(self.balance_icon)
+
         self.balance_title_lbl = QLabel(self.total_widget)
         self.balance_title_lbl.setObjectName(u"balance_title_lbl")
         self.balance_title_lbl.setStyleSheet(u"color: #c8fafa;\n"
@@ -73,7 +90,10 @@ class Ui_MainWindow(object):
 "border: none;\n"
 "")
 
-        self.verticalLayout_6.addWidget(self.balance_title_lbl)
+        self.horizontalLayout_2.addWidget(self.balance_title_lbl)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_2)
 
         self.balance_lbl = QLabel(self.total_widget)
         self.balance_lbl.setObjectName(u"balance_lbl")
@@ -86,6 +106,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addWidget(self.balance_lbl)
 
 
+        self.verticalLayout_7.addLayout(self.verticalLayout_6)
+
+
         self.verticalLayout.addWidget(self.total_widget)
 
         self.outcome_widget = QWidget(self.balance_frame)
@@ -95,14 +118,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(8, 4, 4, 4)
         self.outcome_container = QHBoxLayout()
-        self.outcome_container.setSpacing(0)
+        self.outcome_container.setSpacing(4)
         self.outcome_container.setObjectName(u"outcome_container")
         self.outcome_container.setContentsMargins(-1, 0, -1, -1)
         self.outcome_icon = QLabel(self.outcome_widget)
         self.outcome_icon.setObjectName(u"outcome_icon")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.outcome_icon.sizePolicy().hasHeightForWidth())
         self.outcome_icon.setSizePolicy(sizePolicy1)
         self.outcome_icon.setMinimumSize(QSize(24, 24))
@@ -145,7 +165,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.verticalLayout_4.setContentsMargins(8, 4, 4, 4)
         self.income_container = QHBoxLayout()
-        self.income_container.setSpacing(0)
+        self.income_container.setSpacing(4)
         self.income_container.setObjectName(u"income_container")
         self.income_container.setContentsMargins(-1, 0, -1, -1)
         self.income_icon = QLabel(self.income_widget)
@@ -227,6 +247,7 @@ class Ui_MainWindow(object):
 "background-color: none;\n"
 "border: none;\n"
 "")
+        self.category_edit_btn.setIconSize(QSize(24, 24))
 
         self.title_container.addWidget(self.category_edit_btn)
 
@@ -366,6 +387,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Finance tracker", None))
+        self.balance_icon.setText(QCoreApplication.translate("MainWindow", u"Icon", None))
         self.balance_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0431\u0430\u043b\u0430\u043d\u0441", None))
         self.balance_lbl.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.outcome_icon.setText(QCoreApplication.translate("MainWindow", u"icon", None))
