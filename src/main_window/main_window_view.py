@@ -1,7 +1,6 @@
 import ctypes
 import math
 import os
-from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
@@ -109,7 +108,6 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         self.balance_icon.setPixmap(QPixmap('src/img/balance.svg'))
         self.income_icon.setPixmap(QPixmap('src/img/income.svg'))
         self.outcome_icon.setPixmap(QPixmap('src/img/outcome.svg'))
-
 
     def show_message(
         self, title: str, message: str, message_type: str = 'info'

@@ -12,7 +12,7 @@ class CategoriesHandler:
         query.addBindValue(name)
 
         if not query.exec():
-            print("Ошибка при добавлении категории:", query.lastError().text())
+            print('Ошибка при добавлении категории:', query.lastError().text())
             return False
         return True
 
@@ -31,7 +31,7 @@ class CategoriesHandler:
         query.addBindValue(name)
 
         if not query.exec():
-            print("Ошибка при удалении категории:", query.lastError().text())
+            print('Ошибка при удалении категории:', query.lastError().text())
             return False
         return True
 
@@ -60,6 +60,6 @@ class CategoriesHandler:
         query.addBindValue(old_name)
 
         if not query.exec():
-            print("Ошибка при обновлении категории:", query.lastError().text())
+            print('Ошибка при обновлении категории:', query.lastError().text())
             return False
         return True

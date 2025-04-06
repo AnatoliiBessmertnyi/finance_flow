@@ -75,7 +75,7 @@ class MainWindowHandler:
     def fetch_all_operations(self, period='month'):
         """Возвращает все операции из базы данных."""
         operations = []
-        date_filter = self._get_date_filter(period)
+        date_filter = self.get_date_filter(period)
         sql_query = f'SELECT * FROM finances WHERE {date_filter}'
         query = self.execute_query(sql_query)
         while query.next():
@@ -163,7 +163,7 @@ class MainWindowHandler:
             }
         }
 
-    def _get_date_filter(self, period='month'):
+    def get_date_filter(self, period='month'):
         today = datetime.now()
 
         if period == 'day':

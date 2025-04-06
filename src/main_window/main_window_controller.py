@@ -24,7 +24,6 @@ class MainWindowController(QMainWindow):
         self.handler = handler
         self.handler.initialize_database()
         self.current_period = 'month'
-        self.current_selected = 'outcome'
         self.old_outcome_data = None
         self.old_income_data = None
 
@@ -47,7 +46,7 @@ class MainWindowController(QMainWindow):
         self.model = QSqlTableModel(self)
         self.model.setTable('finances')
 
-        date_filter = self.handler._get_date_filter(self.current_period)
+        date_filter = self.handler.get_date_filter(self.current_period)
         if date_filter:
             self.model.setFilter(date_filter)
 

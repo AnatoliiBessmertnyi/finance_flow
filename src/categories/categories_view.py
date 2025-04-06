@@ -35,9 +35,13 @@ class CategoriesView(QDialog, Ui_Dialog):
         """Очищает поле ввода."""
         self.category_name_te.clear()
 
+    def show_info(self, message: str):
+        """Показывает сообщение об ошибке."""
+        QMessageBox.information(self, 'Успешно', message)
+
     def show_error(self, message: str):
         """Показывает сообщение об ошибке."""
-        QMessageBox.warning(self, "Ошибка", message)
+        QMessageBox.warning(self, 'Ошибка', message)
 
     def get_category_name(self) -> str:
         """Возвращает текст из поля ввода."""

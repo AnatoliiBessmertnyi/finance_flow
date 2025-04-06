@@ -113,7 +113,9 @@ class CategoriesController:
             self.restore_old_name()
             return
         elif self.handler.update_category(old_name, new_name):
-            print(f'Категория "{old_name}" успешно обновлена на "{new_name}".')
+            self.view.show_info(
+                f'Категория "{old_name}" успешно обновлена на "{new_name}".'
+            )
         else:
             self.view.show_error('Ошибка при обновлении категории.')
             self.load_categories()
