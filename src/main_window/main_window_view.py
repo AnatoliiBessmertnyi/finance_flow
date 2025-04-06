@@ -120,6 +120,17 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         elif message_type == 'info':
             QMessageBox.information(self, title, message)
 
+    def show_question(self, message: str) -> bool:
+        """Показывает диалог с вопросом и кнопками Да/Нет."""
+        reply = QMessageBox.question(
+            self,
+            'Подтверждение',
+            message,
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        return reply == QMessageBox.Yes
+
     def update_balances(self, sorted_data: dict) -> None:
         """Обновляет общие балансы.
 

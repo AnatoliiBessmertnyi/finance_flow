@@ -79,6 +79,7 @@ class MainWindowController(QMainWindow):
         self.old_outcome_data = new_outcome_data
         self.old_income_data = new_income_data
 
+
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
         operation_id = None
@@ -124,8 +125,61 @@ class MainWindowController(QMainWindow):
         self.categories_view = CategoriesView()
         self.categories_handler = CategoriesHandler(self.handler)
         self.categories_controller = CategoriesController(
-            self.categories_view,
-            self.categories_handler,
-            self.operations_handler
+            self.categories_view, self.categories_handler,
+        )
+        self.categories_controller.category_deleted.connect(
+            self.handle_category_deleted
+        )
+        self.categories_controller.category_updated.connect(
+            self.handle_category_updated
         )
         self.categories_view.exec()
+
+    def handle_category_deleted(self, category_name: str) -> None:
+        """Обработчик удаления категории"""
+        operations_count = (
+            self.operations_handler.get_operations_count_by_category(
+                category_name
+            )
+        )
+
+        if operations_count > 0:
+            result = self.view.show_question(
+                f'Категория "{category_name}" используется в '
+                f'{operations_count} операциях. При удалении категории '
+                'эти операции будут перемещены в категорию "Другое". '
+                'Продолжить?'
+            )
+            if not result:
+                return
+            if not self.operations_handler.update_operations_category(
+                category_name, 'Другое'
+            ):
+                self.view.show_message(
+                    'Ошибка', 'Ошибка при обновлении операций.', 'error')
+                return
+
+        self.load_operations()
+        self.reload_data()
+        self.update_category_widgets(
+            self.handler.get_category_statistics_detailed()
+        )
+
+    def handle_category_updated(self, old_name: str, new_name: str):
+        """Обработчик изменения названия категории"""
+        operations_count = (
+            self.operations_handler.get_operations_count_by_category(old_name)
+        )
+        if operations_count > 0:
+            if not self.operations_handler.update_operations_category(
+                old_name, new_name
+            ):
+                self.view.show_error('Ошибка при обновлении операций.')
+                self.restore_old_name()
+                return
+
+        self.load_operations()
+        self.reload_data()
+        self.update_category_widgets(
+            self.handler.get_category_statistics_detailed()
+        )
