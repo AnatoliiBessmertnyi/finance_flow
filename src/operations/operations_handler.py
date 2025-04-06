@@ -75,3 +75,25 @@ class OperationsHandler:
             categories.append(other_category)
 
         return categories
+
+    def update_operations_category(
+        self, old_category: str, new_category: str
+    ) -> bool:
+        """Обновляет категорию во всех операциях, где она использовалась."""
+        query = '''
+            UPDATE finances
+            SET Category=?
+            WHERE Category=?
+        '''
+        return self.db_handler.execute_query(
+            query, [new_category, old_category]
+        )
+
+    def get_operations_count_by_category(self, category: str) -> int:
+        """Возвращает количество операций с указанной категорией."""
+        query = QtSql.QSqlQuery(self.db_handler.db)
+        query.prepare('SELECT COUNT(*) FROM finances WHERE Category=?')
+        query.addBindValue(category)
+        if query.exec() and query.next():
+            return query.value(0)
+        return 0

@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import QObject, Signal
+
 if TYPE_CHECKING:
     from src.categories.categories_handler import CategoriesHandler
     from src.categories.categories_view import CategoriesView
 
 
-class CategoriesController:
+class CategoriesController(QObject):
     PROTECTED_CATEGORIES = [
         'Продукты',
         'Транспорт',
@@ -13,8 +15,15 @@ class CategoriesController:
         'Развлечения',
         'Другое'
     ]
+    category_deleted = Signal(str)
+    category_updated = Signal(str, str)
 
-    def __init__(self, view: 'CategoriesView', handler: 'CategoriesHandler'):
+    def __init__(
+        self,
+        view: 'CategoriesView',
+        handler: 'CategoriesHandler',
+    ):
+        super().__init__()
         self.view = view
         self.handler = handler
         self.view.controller = self
@@ -85,9 +94,12 @@ class CategoriesController:
             category_name = (
                 self.view.table_container.item(selected_row, 0).text()
             )
-
             if self.handler.delete_category(category_name):
                 self.view.table_container.removeRow(selected_row)
+                self.category_deleted.emit(category_name)
+                self.view.show_info(
+                    f'Категория "{category_name}" успешно удалена.'
+                )
         else:
             self.view.show_error('Не выбрана категория для удаления.')
 
@@ -112,7 +124,9 @@ class CategoriesController:
             self.view.show_error('Нельзя изменять системную категорию.')
             self.restore_old_name()
             return
-        elif self.handler.update_category(old_name, new_name):
+
+        if self.handler.update_category(old_name, new_name):
+            self.category_updated.emit(old_name, new_name)
             self.view.show_info(
                 f'Категория "{old_name}" успешно обновлена на "{new_name}".'
             )
