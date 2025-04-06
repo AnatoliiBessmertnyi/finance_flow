@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.categories.categories_handler import CategoriesHandler
     from src.categories.categories_view import CategoriesView
+    from src.operations.operations_view import OperationsHandler
 
 
 class CategoriesController:
@@ -14,10 +15,16 @@ class CategoriesController:
         'Другое'
     ]
 
-    def __init__(self, view: 'CategoriesView', handler: 'CategoriesHandler'):
+    def __init__(
+        self,
+        view: 'CategoriesView',
+        handler: 'CategoriesHandler',
+        operations_handler: 'OperationsHandler'
+    ):
         self.view = view
         self.handler = handler
         self.view.controller = self
+        self.operations_handler = operations_handler
 
         self.old_name = ''
 
@@ -85,9 +92,30 @@ class CategoriesController:
             category_name = (
                 self.view.table_container.item(selected_row, 0).text()
             )
-
+            operations_count = (
+                self.operations_handler.get_operations_count_by_category(
+                    category_name
+                )
+            )
+            if operations_count > 0:
+                result = self.view.show_question(
+                    f'Категория "{category_name}" используется в '
+                    f'{operations_count} операциях. При удалении категории '
+                    'эти операции будут перемещены в категорию "Другое". '
+                    'Продолжить?'
+                )
+                if not result:
+                    return
+                if not self.operations_handler.update_operations_category(
+                    category_name, 'Другое'
+                ):
+                    self.view.show_error('Ошибка при обновлении операций.')
+                    return
             if self.handler.delete_category(category_name):
                 self.view.table_container.removeRow(selected_row)
+                self.view.show_info(
+                    f'Категория "{category_name}" успешно удалена.'
+                )
         else:
             self.view.show_error('Не выбрана категория для удаления.')
 

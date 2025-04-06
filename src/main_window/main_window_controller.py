@@ -124,6 +124,8 @@ class MainWindowController(QMainWindow):
         self.categories_view = CategoriesView()
         self.categories_handler = CategoriesHandler(self.handler)
         self.categories_controller = CategoriesController(
-            self.categories_view, self.categories_handler
+            self.categories_view,
+            self.categories_handler,
+            self.operations_handler
         )
         self.categories_view.exec()

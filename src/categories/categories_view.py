@@ -39,6 +39,17 @@ class CategoriesView(QDialog, Ui_Dialog):
         """Показывает сообщение об ошибке."""
         QMessageBox.information(self, 'Успешно', message)
 
+    def show_question(self, message: str) -> bool:
+        """Показывает диалог с вопросом и кнопками Да/Нет."""
+        reply = QMessageBox.question(
+            self,
+            'Подтверждение',
+            message,
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        return reply == QMessageBox.Yes
+
     def show_error(self, message: str):
         """Показывает сообщение об ошибке."""
         QMessageBox.warning(self, 'Ошибка', message)
