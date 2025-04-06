@@ -195,7 +195,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(4)
 
-        pie_chart = PieChartWidget(categories_dict, total_amount)
+        pie_chart = PieChartWidget(
+            categories_dict, total_amount, CategoryWidget.COLORS
+        )
         main_layout.addWidget(pie_chart)
 
         categories_layout = self.create_categories_layout(categories_list)
@@ -263,12 +265,12 @@ class CenterAlignDelegate(QStyledItemDelegate):
 class CategoryWidget(QWidget):
     COLORS = [
         '#4FC5DF',
+        '#88DCDC',
         '#77E1A1',
         '#FFD166',
         '#FFB473',
         '#FD788B',
         '#8382F7',
-        '#9DACE9',
         '#B3CDDA'
     ]
     DEFAULT_CATEGORIES = {
@@ -351,8 +353,8 @@ class CategoryWidget(QWidget):
 
 
 class PieChartWidget(QWidget):
-    def __init__(self, categories_data: dict, total_amount: int, parent=None):
-        super().__init__(parent)
+    def __init__(self, categories_data: dict, total_amount: int, colors: list):
+        super().__init__()
         self.categories = categories_data
         self.total_amount = total_amount
         self.setFixedSize(200, 200)
@@ -360,7 +362,7 @@ class PieChartWidget(QWidget):
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(
-            PieChartDrawingWidget(categories_data, self.total_amount)
+            PieChartDrawingWidget(categories_data, self.total_amount, colors)
         )
         self.setLayout(layout)
 
@@ -369,21 +371,12 @@ class PieChartDrawingWidget(QWidget):
     MIN_SEGMENT_ANGLE = 25.2
     MIN_PERCENTAGE = 0.07
 
-    def __init__(self, categories_data, total_amount, parent=None):
-        super().__init__(parent)
+    def __init__(self, categories_data, total_amount, colors: list):
+        super().__init__()
         self.categories = categories_data
         self.total_amount = total_amount
         self.setFixedSize(200, 200)
-        self.colors = [
-            QColor('#4FC5DF'),
-            QColor('#88DCDC'),
-            QColor('#77E1A1'),
-            QColor('#FFD166'),
-            QColor('#FFB473'),
-            QColor('#FD788B'),
-            QColor('#8382F7'),
-            QColor('#B3CDDA'),
-        ]
+        self.colors = colors
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -463,7 +456,7 @@ class PieChartDrawingWidget(QWidget):
                 (start_angle, span_angle, color_index, percentage)
             )
 
-            color = self.colors[color_index % len(self.colors)]
+            color = QColor(self.colors[color_index % len(self.colors)])
             painter.setBrush(QBrush(color))
             painter.setPen(QPen(Qt.NoPen))
             painter.drawPie(rect, int(start_angle * 16), int(span_angle * 16))
@@ -516,7 +509,7 @@ class PieChartDrawingWidget(QWidget):
         color_index: int
     ) -> None:
         """Отрисовывает скругление для начального края сегмента с обводкой"""
-        color = self.colors[color_index % len(self.colors)]
+        color = QColor(self.colors[color_index % len(self.colors)])
         corner_radius = 12
 
         center = rect.center()
