@@ -5,7 +5,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
-                           QRadialGradient, QPixmap)
+                           QPixmap, QRadialGradient)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
                                QLabel, QLayout, QMainWindow, QMessageBox,
                                QStyledItemDelegate, QVBoxLayout, QWidget)
@@ -376,12 +376,12 @@ class PieChartDrawingWidget(QWidget):
         self.setFixedSize(200, 200)
         self.colors = [
             QColor('#4FC5DF'),
+            QColor('#88DCDC'),
             QColor('#77E1A1'),
             QColor('#FFD166'),
             QColor('#FFB473'),
             QColor('#FD788B'),
             QColor('#8382F7'),
-            QColor('#9DACE9'),
             QColor('#B3CDDA'),
         ]
 
@@ -515,7 +515,7 @@ class PieChartDrawingWidget(QWidget):
         start_angle: float,
         color_index: int
     ) -> None:
-        """Отрисовывает скругление для начального края сегмента"""
+        """Отрисовывает скругление для начального края сегмента с обводкой"""
         color = self.colors[color_index % len(self.colors)]
         corner_radius = 12
 
@@ -534,12 +534,27 @@ class PieChartDrawingWidget(QWidget):
             return
 
         direction /= length
-
         corner_center = start_point - direction * corner_radius
 
         painter.setBrush(QBrush(color))
         painter.setPen(QPen(Qt.NoPen))
         painter.drawEllipse(corner_center, corner_radius, corner_radius)
+
+        outline_pen = QPen(QColor(0, 0, 0, 40))
+        outline_pen.setWidth(1)
+        painter.setPen(outline_pen)
+        painter.setBrush(Qt.NoBrush)
+
+        left_start_angle = int(start_angle * 16) + (180 * 16)
+        left_span_angle = 180 * 16
+
+        outline_rect = QRectF(
+            corner_center.x() - corner_radius,
+            corner_center.y() - corner_radius,
+            corner_radius * 2,
+            corner_radius * 2
+        )
+        painter.drawArc(outline_rect, left_start_angle, left_span_angle)
 
     def _draw_segment_label(
         self,
