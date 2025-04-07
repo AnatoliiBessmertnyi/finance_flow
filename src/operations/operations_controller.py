@@ -1,8 +1,11 @@
+from typing import TYPE_CHECKING
+
 from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import QDialog
 
-from src.operations.operations_handler import OperationsHandler
-from src.operations.operations_view import OperationsView
+if TYPE_CHECKING:
+    from src.operations.operations_handler import OperationsHandler
+    from src.operations.operations_view import OperationsView
 
 
 class OperationsController(QDialog):
@@ -15,15 +18,26 @@ class OperationsController(QDialog):
     ):
         super().__init__()
         self.view = view
-        self.view.setupUi(self)
         self.handler = handler
         self.mode = mode
         self.operation_id = operation_id
+        self.current_categories = []
 
+        self.load_categories()
         if mode == 'edit':
             self.load_operation_data()
+        else:
+            self.view.date.setDateTime(QDateTime.currentDateTime())
 
         self.view.pushButton.clicked.connect(self.save_operation)
+
+    def load_categories(self):
+        """Загружает категории из базы данных и добавляет их в QComboBox."""
+        new_categories = self.handler.get_all_categories()
+        if new_categories != self.current_categories:
+            self.current_categories = new_categories
+            self.view.category_cb.clear()
+            self.view.category_cb.addItems(new_categories)
 
     def load_operation_data(self):
         """Загружает данные операции для редактирования."""
@@ -36,7 +50,6 @@ class OperationsController(QDialog):
             self.view.category_cb.setCurrentText(operation_data['category'])
             self.view.description_le.setText(operation_data['description'])
             self.view.amount_le.setText(str(operation_data['balance']))
-            self.view.operation_type_cb.setCurrentText(operation_data['status'])
 
     def save_operation(self):
         """Сохраняет новую или отредактированную операцию."""
@@ -44,14 +57,11 @@ class OperationsController(QDialog):
         category = self.view.category_cb.currentText()
         description = self.view.description_le.text()
         balance = self.view.amount_le.text()
-        status = self.view.operation_type_cb.currentText()
         if self.mode == 'new':
-            self.handler.add_operation(
-                date, category, description, balance, status
-            )
+            self.handler.add_operation(date, category, description, balance)
         else:
             self.handler.edit_operation(
-                self.operation_id, date, category, description, balance, status
+                self.operation_id, date, category, description, balance
             )
 
-        self.accept()
+        self.view.accept()
