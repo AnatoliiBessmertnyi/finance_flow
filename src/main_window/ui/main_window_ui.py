@@ -56,16 +56,85 @@ class Ui_MainWindow(object):
         self.verticalLayout.setSpacing(8)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(16, 8, 16, 16)
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setSpacing(6)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.current_period_btn = QPushButton(self.balance_frame)
+        self.current_period_btn.setObjectName(u"current_period_btn")
+        self.current_period_btn.setStyleSheet(u"QPushButton {\n"
+"    color: #c8fafa;\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    font-size: 13px;\n"
+"    text-decoration: none;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: #185353;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    font-weight: bold;\n"
+"	text-decoration: underline;\n"
+"}")
+        self.current_period_btn.setCheckable(True)
+        self.current_period_btn.setChecked(True)
+        self.current_period_btn.setAutoExclusive(True)
+
+        self.horizontalLayout_3.addWidget(self.current_period_btn)
+
+        self.previous_period_btn = QPushButton(self.balance_frame)
+        self.previous_period_btn.setObjectName(u"previous_period_btn")
+        self.previous_period_btn.setStyleSheet(u"QPushButton {\n"
+"    color: #c8fafa;\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    font-size: 13px;\n"
+"    text-decoration: none;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: #185353;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    font-weight: bold;\n"
+"	text-decoration: underline;\n"
+"}")
+        self.previous_period_btn.setCheckable(True)
+        self.previous_period_btn.setAutoExclusive(True)
+
+        self.horizontalLayout_3.addWidget(self.previous_period_btn)
+
+        self.year_period_btn = QPushButton(self.balance_frame)
+        self.year_period_btn.setObjectName(u"year_period_btn")
+        self.year_period_btn.setStyleSheet(u"QPushButton {\n"
+"    color: #c8fafa;\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    font-size: 13px;\n"
+"    text-decoration: none;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: #185353;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    font-weight: bold;\n"
+"	text-decoration: underline;\n"
+"}")
+        self.year_period_btn.setCheckable(True)
+        self.year_period_btn.setAutoExclusive(True)
+
+        self.horizontalLayout_3.addWidget(self.year_period_btn)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+
         self.total_widget = QWidget(self.balance_frame)
         self.total_widget.setObjectName(u"total_widget")
-        self.total_widget.setStyleSheet(u"background: transparent;\n"
-"border: none;")
-        self.verticalLayout_7 = QVBoxLayout(self.total_widget)
-        self.verticalLayout_7.setSpacing(0)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_6 = QVBoxLayout()
+        self.total_widget.setStyleSheet(u"border: none;\n"
+"border-radius: none;\n"
+"background: none;")
+        self.verticalLayout_6 = QVBoxLayout(self.total_widget)
+        self.verticalLayout_6.setSpacing(4)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(4, 2, 0, 2)
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(4)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -104,9 +173,6 @@ class Ui_MainWindow(object):
 "")
 
         self.verticalLayout_6.addWidget(self.balance_lbl)
-
-
-        self.verticalLayout_7.addLayout(self.verticalLayout_6)
 
 
         self.verticalLayout.addWidget(self.total_widget)
@@ -207,9 +273,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.income_widget)
 
-        self.verticalLayout.setStretch(0, 2)
-        self.verticalLayout.setStretch(1, 1)
         self.verticalLayout.setStretch(2, 1)
+        self.verticalLayout.setStretch(3, 1)
 
         self.horizontalLayout.addWidget(self.balance_frame)
 
@@ -387,8 +452,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Finance tracker", None))
+        self.current_period_btn.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u043c\u0435\u0441\u044f\u0446", None))
+        self.previous_period_btn.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0439 \u043c\u0435\u0441\u044f\u0446", None))
+        self.year_period_btn.setText(QCoreApplication.translate("MainWindow", u"\u0413\u043e\u0434", None))
         self.balance_icon.setText(QCoreApplication.translate("MainWindow", u"Icon", None))
-        self.balance_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0431\u0430\u043b\u0430\u043d\u0441", None))
+        self.balance_title_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0430\u043b\u0430\u043d\u0441", None))
         self.balance_lbl.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.outcome_icon.setText(QCoreApplication.translate("MainWindow", u"icon", None))
         self.outcome_lbl.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0440\u0430\u0442\u044b", None))
