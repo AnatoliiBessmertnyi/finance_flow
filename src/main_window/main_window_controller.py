@@ -32,6 +32,7 @@ class MainWindowController(QMainWindow):
             self.view.previous_period_btn: 'previous_month',
             self.view.year_period_btn: 'current_year',
         }
+        self.last_used_category = None
 
         self.initialize_operations()
         self.load_operations()
@@ -114,9 +115,22 @@ class MainWindowController(QMainWindow):
         self.operations_controller = OperationsController(
             self.operations_view, self.operations_handler, mode, operation_id
         )
+
+        if self.last_used_category and mode == 'new':
+            self.operations_controller.view.category_cb.setCurrentText(
+                self.last_used_category
+            )
+        self.operations_controller.last_category.connect(
+            self.update_last_category
+        )
+
         self.operations_view.exec()
         self.load_operations()
         self.reload_data()
+
+    def update_last_category(self, category: str):
+        """Обновляет последнюю использованную категорию."""
+        self.last_used_category = category
 
     def delete_operation(self):
         """Удаляет выбранную операцию."""
