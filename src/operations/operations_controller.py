@@ -60,6 +60,8 @@ class OperationsController(QDialog):
 
     def save_operation(self):
         """Сохраняет новую или отредактированную операцию."""
+        if not self.validate_form():
+            return
         date = self.view.date.text()
         category = self.view.category_cb.currentText()
         description = self.view.description_le.text()
@@ -73,3 +75,22 @@ class OperationsController(QDialog):
         self.last_category.emit(category)
 
         self.view.accept()
+
+    def validate_form(self) -> bool:
+        """Проверяет, что форма заполнена корректно."""
+        if not self.view.category_cb.currentText():
+            self.view.show_message(
+                "Ошибка",
+                "Выберите категорию",
+                "error"
+            )
+            return False
+        elif not self.view.amount_le.text():
+            self.view.show_message(
+                "Ошибка",
+                "Введите сумму",
+                "error"
+            )
+            return False
+        else:
+            return True
