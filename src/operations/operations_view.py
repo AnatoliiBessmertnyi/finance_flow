@@ -1,4 +1,5 @@
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import QRegularExpression
+from PySide6.QtGui import QIcon, QRegularExpressionValidator
 from PySide6.QtWidgets import QDialog, QMessageBox
 
 from src.operations.ui.new_operation_ui import Ui_Dialog
@@ -83,6 +84,10 @@ class OperationsView(QDialog, Ui_Dialog):
         ''')
 
         self.ok_btn.setIcon(QIcon('src/img/done.svg'))
+
+        pattern = QRegularExpression(r'^\d*([.,]?\d{0,2})?$')
+        validator = QRegularExpressionValidator(pattern)
+        self.amount_le.setValidator(validator)
 
     def show_message(
         self, title: str, message: str, message_type: str = 'info'
