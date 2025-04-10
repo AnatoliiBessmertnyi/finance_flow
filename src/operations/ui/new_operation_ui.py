@@ -104,11 +104,11 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.reload_cb)
 
-        self.pushButton = QPushButton(self.operation_frame)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(0, 40))
-        self.pushButton.setMaximumSize(QSize(16777215, 40))
-        self.pushButton.setStyleSheet(u"QPushButton {\n"
+        self.ok_btn = QPushButton(self.operation_frame)
+        self.ok_btn.setObjectName(u"ok_btn")
+        self.ok_btn.setMinimumSize(QSize(0, 40))
+        self.ok_btn.setMaximumSize(QSize(16777215, 40))
+        self.ok_btn.setStyleSheet(u"QPushButton {\n"
 "color: #c8fafa;\n"
 "background-color: rgba(255, 255, 255, 30);\n"
 "border: 1px solid rgba(255, 255, 255, 40);\n"
@@ -124,9 +124,9 @@ class Ui_Dialog(object):
 "}\n"
 "\n"
 "")
-        self.pushButton.setIconSize(QSize(24, 24))
+        self.ok_btn.setIconSize(QSize(24, 24))
 
-        self.verticalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addWidget(self.ok_btn)
 
 
         self.verticalLayout_2.addWidget(self.operation_frame)
@@ -147,6 +147,6 @@ class Ui_Dialog(object):
         self.description_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435", None))
         self.amount_le.setPlaceholderText(QCoreApplication.translate("Dialog", u"\u0421\u0443\u043c\u043c\u0430", None))
         self.reload_cb.setText(QCoreApplication.translate("Dialog", u"\u0415\u0436\u0435\u043c\u0435\u0441\u044f\u0447\u043d\u0430\u044f \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044f", None))
-        self.pushButton.setText(QCoreApplication.translate("Dialog", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
+        self.ok_btn.setText(QCoreApplication.translate("Dialog", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
     # retranslateUi
 

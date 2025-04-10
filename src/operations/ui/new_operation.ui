@@ -143,7 +143,7 @@ padding-left: 10px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="ok_btn">
         <property name="minimumSize">
          <size>
           <width>0</width>

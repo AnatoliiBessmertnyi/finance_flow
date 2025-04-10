@@ -191,7 +191,7 @@ QPushButton:checked {
            </layout>
           </item>
           <item>
-           <widget class="QWidget" name="total_widget" native="true">
+           <widget class="QWidget" name="balance_widget" native="true">
             <property name="styleSheet">
              <string notr="true">border: none;
 border-radius: none;
@@ -214,7 +214,7 @@ background: none;</string>
               <number>2</number>
              </property>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <layout class="QHBoxLayout" name="balance_container">
                <property name="spacing">
                 <number>4</number>
                </property>
@@ -228,18 +228,21 @@ background: none;</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>24</width>
-                   <height>24</height>
+                   <width>28</width>
+                   <height>28</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>24</width>
-                   <height>24</height>
+                   <width>28</width>
+                   <height>28</height>
                   </size>
                  </property>
                  <property name="text">
                   <string>Icon</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
@@ -330,6 +333,9 @@ border: none;</string>
                  <property name="text">
                   <string>icon</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -418,6 +424,9 @@ padding-top: 10px;</string>
                  </property>
                  <property name="text">
                   <string>icon</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
