@@ -85,7 +85,7 @@ class OperationsView(QDialog, Ui_Dialog):
 
         self.ok_btn.setIcon(QIcon('src/img/done.svg'))
 
-        pattern = QRegularExpression(r'^\d*([.,]?\d{0,2})?$')
+        pattern = QRegularExpression(r'^-?\d+([.,]\d{0,2})?$')
         validator = QRegularExpressionValidator(pattern)
         self.amount_le.setValidator(validator)
 

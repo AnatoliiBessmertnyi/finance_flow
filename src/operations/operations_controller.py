@@ -65,7 +65,7 @@ class OperationsController(QDialog):
         date = self.view.date.text()
         category = self.view.category_cb.currentText()
         description = self.view.description_le.text()
-        balance = self.view.amount_le.text()
+        balance = self.view.amount_le.text().replace(',', '.')
         if self.mode == 'new':
             self.handler.add_operation(date, category, description, balance)
         else:
