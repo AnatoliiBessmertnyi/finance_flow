@@ -2,7 +2,7 @@ import ctypes
 import math
 import os
 
-from PySide6.QtCore import QPointF, QRectF, Qt
+from PySide6.QtCore import QLocale, QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QIcon, QPainter, QPen,
                            QPixmap, QRadialGradient)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
@@ -37,7 +37,9 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
             QHeaderView.Stretch
         )
         delegate = CenterAlignDelegate(self.table_container)
+        number_delegate = NumberFormatDelegate(self.table_container)
         self.table_container.setItemDelegate(delegate)
+        self.table_container.setItemDelegateForColumn(4, number_delegate)
 
         self.table_container.horizontalHeader().setStyleSheet('''
             QHeaderView::section {
@@ -91,7 +93,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             '../img',
-            'main_icon.ico'
+            'main_icon.png'
         )
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
             'myappid'
@@ -269,6 +271,28 @@ class CenterAlignDelegate(QStyledItemDelegate):
     def initStyleOption(self, option, index):
         super().initStyleOption(option, index)
         option.displayAlignment = Qt.AlignCenter
+
+
+class NumberFormatDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def displayText(self, value, locale):
+        """Форматируем числовые значения с точкой в качестве разделителя."""
+        try:
+            str_value = str(value).replace(',', '.')
+            num_value = float(str_value)
+
+            if num_value.is_integer():
+                return str(int(num_value))
+            return str_value
+        except (ValueError, TypeError):
+            return str(value)
+
+    def initStyleOption(self, option, index):
+        """Добавляем выравнивание по центру."""
+        super().initStyleOption(option, index)
+        option.displayAlignment = Qt.AlignmentFlag.AlignCenter
 
 
 class CategoryWidget(QWidget):

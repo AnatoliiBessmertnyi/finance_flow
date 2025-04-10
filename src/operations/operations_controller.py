@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QDateTime
+from PySide6.QtCore import QDateTime, Signal
 from PySide6.QtWidgets import QDialog
 
 if TYPE_CHECKING:
@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class OperationsController(QDialog):
+    last_category = Signal(str)
+
     def __init__(
         self,
         view: 'OperationsView',
@@ -24,12 +26,17 @@ class OperationsController(QDialog):
         self.current_categories = []
 
         self.load_categories()
-        if mode == 'edit':
-            self.load_operation_data()
-        else:
+        if self.mode == 'new':
             self.view.date.setDateTime(QDateTime.currentDateTime())
+        else:
+            self.load_operation_data()
 
-        self.view.pushButton.clicked.connect(self.save_operation)
+        self.view.set_locales(self.mode)
+        self.connect_signals()
+
+    def connect_signals(self) -> None:
+        """Подключает сигналы."""
+        self.view.ok_btn.clicked.connect(self.save_operation)
 
     def load_categories(self):
         """Загружает категории из базы данных и добавляет их в QComboBox."""
@@ -53,15 +60,37 @@ class OperationsController(QDialog):
 
     def save_operation(self):
         """Сохраняет новую или отредактированную операцию."""
+        if not self.validate_form():
+            return
         date = self.view.date.text()
         category = self.view.category_cb.currentText()
         description = self.view.description_le.text()
-        balance = self.view.amount_le.text()
+        balance = self.view.amount_le.text().replace(',', '.')
         if self.mode == 'new':
             self.handler.add_operation(date, category, description, balance)
         else:
             self.handler.edit_operation(
                 self.operation_id, date, category, description, balance
             )
+        self.last_category.emit(category)
 
         self.view.accept()
+
+    def validate_form(self) -> bool:
+        """Проверяет, что форма заполнена корректно."""
+        if not self.view.category_cb.currentText():
+            self.view.show_message(
+                "Ошибка",
+                "Выберите категорию",
+                "error"
+            )
+            return False
+        elif not self.view.amount_le.text():
+            self.view.show_message(
+                "Ошибка",
+                "Введите сумму",
+                "error"
+            )
+            return False
+        else:
+            return True

@@ -23,18 +23,31 @@ class MainWindowController(QMainWindow):
         self.view = view
         self.handler = handler
         self.handler.initialize_database()
-        self.current_period = 'month'
+        self.current_period = 'current_month'
         self.old_outcome_data = None
         self.old_income_data = None
+        self.FINANCIAL_MONTH_START_DAY = 5
+        self.config_period = {
+            self.view.current_period_btn: 'current_month',
+            self.view.previous_period_btn: 'previous_month',
+            self.view.year_period_btn: 'current_year',
+        }
+        self.last_used_category = None
 
         self.initialize_operations()
         self.load_operations()
         self.reload_data()
+        self.connect_signals()
 
+    def connect_signals(self) -> None:
+        """Подключает сигналы."""
         self.view.new_btn.clicked.connect(self.open_operation_window)
         self.view.edit_btn.clicked.connect(self.open_operation_window)
         self.view.delete_btn.clicked.connect(self.delete_operation)
         self.view.category_edit_btn.clicked.connect(self.open_categories)
+        self.view.current_period_btn.clicked.connect(self.set_period)
+        self.view.previous_period_btn.clicked.connect(self.set_period)
+        self.view.year_period_btn.clicked.connect(self.set_period)
 
     def initialize_operations(self):
         self.operations_view = OperationsView()
@@ -46,7 +59,9 @@ class MainWindowController(QMainWindow):
         self.model = QSqlTableModel(self)
         self.model.setTable('finances')
 
-        date_filter = self.handler.get_date_filter(self.current_period)
+        date_filter = self.handler.get_date_filter(
+            self.current_period, self.FINANCIAL_MONTH_START_DAY
+        )
         if date_filter:
             self.model.setFilter(date_filter)
 
@@ -79,7 +94,6 @@ class MainWindowController(QMainWindow):
         self.old_outcome_data = new_outcome_data
         self.old_income_data = new_income_data
 
-
     def open_operation_window(self):
         """Открывает окно для добавления новой операции."""
         operation_id = None
@@ -101,9 +115,22 @@ class MainWindowController(QMainWindow):
         self.operations_controller = OperationsController(
             self.operations_view, self.operations_handler, mode, operation_id
         )
+
+        if self.last_used_category and mode == 'new':
+            self.operations_controller.view.category_cb.setCurrentText(
+                self.last_used_category
+            )
+        self.operations_controller.last_category.connect(
+            self.update_last_category
+        )
+
         self.operations_view.exec()
         self.load_operations()
         self.reload_data()
+
+    def update_last_category(self, category: str):
+        """Обновляет последнюю использованную категорию."""
+        self.last_used_category = category
 
     def delete_operation(self):
         """Удаляет выбранную операцию."""
@@ -183,3 +210,9 @@ class MainWindowController(QMainWindow):
         self.update_category_widgets(
             self.handler.get_category_statistics_detailed()
         )
+
+    def set_period(self):
+        sender = self.sender()
+        self.current_period = self.config_period[sender]
+        self.load_operations()
+        self.reload_data()

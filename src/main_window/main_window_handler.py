@@ -163,34 +163,59 @@ class MainWindowHandler:
             }
         }
 
-    def get_date_filter(self, period='month'):
+    def get_date_filter(self, period='current_month', start_day: int = 1):
         today = datetime.now()
 
-        if period == 'day':
-            date_str = today.strftime('%Y-%m-%d')
-            return f'Date LIKE "{date_str}%"'
+        if period == 'current_month':
+            if today.day >= start_day:
+                start_date = today.replace(day=start_day)
+                end_date = (
+                    start_date + timedelta(days=32)
+                ).replace(day=start_day) - timedelta(days=1)
+            else:
+                end_date = today.replace(day=start_day) - timedelta(days=1)
+                start_date = (
+                    end_date - timedelta(days=32)
+                ).replace(day=start_day)
+            return self.get_date_range_filter(start_date, end_date)
 
-        elif period == 'week':
-            start_date = today - timedelta(days=today.weekday())
-            end_date = start_date + timedelta(days=6)
-            start_str = start_date.strftime('%Y-%m-%d 00:00')
-            end_str = end_date.strftime('%Y-%m-%d 23:59')
-            return f'Date BETWEEN "{start_str}" AND "{end_str}"'
+        elif period == 'previous_month':
+            if today.day >= start_day:
+                end_date = today.replace(day=start_day) - timedelta(days=1)
+                start_date = (
+                    end_date - timedelta(days=32)
+                ).replace(day=start_day)
+            else:
+                start_date = (
+                    today.replace(day=start_day) - timedelta(days=32)
+                ).replace(day=start_day)
+                end_date = today.replace(day=start_day) - timedelta(days=1)
+            return self.get_date_range_filter(start_date, end_date)
 
-        elif period == 'month':
-            first_day = today.replace(day=1)
-            next_month = first_day.replace(day=28) + timedelta(days=4)
-            last_day = next_month - timedelta(days=next_month.day)
-            start_str = first_day.strftime('%Y-%m-%d 00:00')
-            end_str = last_day.strftime('%Y-%m-%d 23:59')
-            return f'Date BETWEEN "{start_str}" AND "{end_str}"'
-
-        elif period == 'year':
-            first_day = today.replace(month=1, day=1)
-            last_day = today.replace(month=12, day=31)
-            start_str = first_day.strftime('%Y-%m-%d 00:00')
-            end_str = last_day.strftime('%Y-%m-%d 23:59')
-            return f'Date BETWEEN "{start_str}" AND "{end_str}"'
+        elif period == 'current_year':
+            if today.day >= start_day:
+                start_date = today.replace(month=1, day=start_day)
+                try:
+                    end_date = today.replace(
+                        month=12, day=start_day-1
+                    ) + timedelta(days=1)
+                except ValueError:
+                    end_date = today.replace(month=12, day=31)
+            else:
+                start_date = today.replace(
+                    year=today.year-1, month=1, day=start_day
+                )
+                try:
+                    end_date = today.replace(day=start_day) - timedelta(days=1)
+                except ValueError:
+                    end_date = today.replace(day=1) - timedelta(days=1)
+            return self.get_date_range_filter(start_date, end_date)
 
         else:
             return '1=1'
+
+    def get_date_range_filter(self, start_date: int, end_date: int):
+        """Формирует SQL-условие для диапазона дат"""
+        start_str = start_date.strftime('%Y-%m-%d 00:00')
+        end_str = end_date.strftime('%Y-%m-%d 23:59')
+        return f"Date BETWEEN '{start_str}' AND '{end_str}'"
