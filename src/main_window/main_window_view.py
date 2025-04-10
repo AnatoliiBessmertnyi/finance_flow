@@ -93,7 +93,7 @@ class MainWindowView(QMainWindow, Ui_MainWindow):
         icon_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             '../img',
-            'main_icon.ico'
+            'main_icon.png'
         )
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
             'myappid'
