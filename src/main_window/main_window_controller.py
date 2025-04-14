@@ -224,3 +224,8 @@ class MainWindowController(QMainWindow):
         if bank_dialog.exec() == QDialog.Accepted:
             selected_bank = bank_dialog.bank_combo.currentText()
             self.start_file_selection(selected_bank)
+
+    def start_file_selection(self, bank_name):
+        file_dialog = FileSelectionDialog(bank_name, self)
+        if file_dialog.exec() == QDialog.Accepted and file_dialog.file_path:
+            self.parse_pdf(file_dialog.file_path, bank_name)
