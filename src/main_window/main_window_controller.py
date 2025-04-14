@@ -12,6 +12,7 @@ from src.operations.operations_handler import OperationsHandler
 from src.operations.operations_view import OperationsView
 from src.import_files.import_bank_selection_dialog import BankSelectionDialog
 from src.import_files.import_file_selection_dialog import FileSelectionDialog
+from src.import_files.pdf_parser import TinkoffPDFParser
 
 if TYPE_CHECKING:
     from src.main_window.main_window_handler import MainWindowHandler
@@ -229,3 +230,8 @@ class MainWindowController(QMainWindow):
         file_dialog = FileSelectionDialog(bank_name, self)
         if file_dialog.exec() == QDialog.Accepted and file_dialog.file_path:
             self.parse_pdf(file_dialog.file_path, bank_name)
+
+    def parse_pdf(self, file_path, bank_name):
+        if bank_name == 'Тинькофф':
+            operations = TinkoffPDFParser.parse(file_path)
+            self.show_import_preview(operations)
