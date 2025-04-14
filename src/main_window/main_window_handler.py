@@ -219,3 +219,12 @@ class MainWindowHandler:
         start_str = start_date.strftime('%Y-%m-%d 00:00')
         end_str = end_date.strftime('%Y-%m-%d 23:59')
         return f"Date BETWEEN '{start_str}' AND '{end_str}'"
+
+    def get_all_categories(self) -> list[str]:
+        """Возвращает список всех категорий из базы данных."""
+        categories = []
+        query = QtSql.QSqlQuery(self.db)
+        query.exec('SELECT Name FROM categories')
+        while query.next():
+            categories.append(query.value(0))
+        return categories

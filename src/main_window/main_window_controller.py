@@ -13,6 +13,7 @@ from src.operations.operations_view import OperationsView
 from src.import_files.import_bank_selection_dialog import BankSelectionDialog
 from src.import_files.import_file_selection_dialog import FileSelectionDialog
 from src.import_files.pdf_parser import TinkoffPDFParser
+from src.import_files.import_preview_dialog import ImportPreviewDialog
 
 if TYPE_CHECKING:
     from src.main_window.main_window_handler import MainWindowHandler
@@ -235,3 +236,20 @@ class MainWindowController(QMainWindow):
         if bank_name == 'Тинькофф':
             operations = TinkoffPDFParser.parse(file_path)
             self.show_import_preview(operations)
+
+    def show_import_preview(self, operations):
+        categories = self.handler.get_all_categories()
+        preview_dialog = ImportPreviewDialog(operations, categories, self)
+        preview_dialog.operations_imported.connect(self.import_operations)
+        preview_dialog.exec()
+
+    def import_operations(self, operations):
+        for op in operations:
+            self.operations_handler.add_operation(
+                date=op['date'],
+                category=op['category'],
+                description=op['description'],
+                amount=op['amount']
+            )
+        self.load_operations()
+        self.reload_data()
