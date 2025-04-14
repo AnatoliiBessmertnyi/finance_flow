@@ -2,15 +2,16 @@ from typing import TYPE_CHECKING
 
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtWidgets import (QHBoxLayout, QMainWindow, QVBoxLayout,
-                               QWidget)
+                               QWidget, QDialog)
 
 from src.categories.categories_controller import CategoriesController
 from src.categories.categories_handler import CategoriesHandler
 from src.categories.categories_view import CategoriesView
-from src.main_window.main_window_view import CategoryWidget
 from src.operations.operations_controller import OperationsController
 from src.operations.operations_handler import OperationsHandler
 from src.operations.operations_view import OperationsView
+from src.import_files.import_bank_selection_dialog import BankSelectionDialog
+from src.import_files.import_file_selection_dialog import FileSelectionDialog
 
 if TYPE_CHECKING:
     from src.main_window.main_window_handler import MainWindowHandler
@@ -48,6 +49,7 @@ class MainWindowController(QMainWindow):
         self.view.current_period_btn.clicked.connect(self.set_period)
         self.view.previous_period_btn.clicked.connect(self.set_period)
         self.view.year_period_btn.clicked.connect(self.set_period)
+        self.view.import_btn.clicked.connect(self.open_import_dialog)
 
     def initialize_operations(self):
         self.operations_view = OperationsView()
@@ -216,3 +218,9 @@ class MainWindowController(QMainWindow):
         self.current_period = self.config_period[sender]
         self.load_operations()
         self.reload_data()
+
+    def open_import_dialog(self):
+        bank_dialog = BankSelectionDialog(self)
+        if bank_dialog.exec() == QDialog.Accepted:
+            selected_bank = bank_dialog.bank_combo.currentText()
+            self.start_file_selection(selected_bank)
