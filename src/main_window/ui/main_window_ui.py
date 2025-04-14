@@ -425,6 +425,28 @@ class Ui_MainWindow(object):
 
         self.buttons_container.addWidget(self.delete_btn)
 
+        self.import_btn = QPushButton(self.main_widget)
+        self.import_btn.setObjectName(u"import_btn")
+        self.import_btn.setStyleSheet(u"QPushButton {\n"
+"color: #c8fafa;\n"
+"background-color: rgba(255, 255, 255, 30);\n"
+"border: 1px solid rgba(255, 255, 255, 40);\n"
+"border-radius: 6px;\n"
+"width: 230px;\n"
+"height: 50px;\n"
+"font-size: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: rgba(255, 255, 255, 40);\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: rgba(255, 255, 255, 70);\n"
+"}\n"
+"\n"
+"")
+
+        self.buttons_container.addWidget(self.import_btn)
+
 
         self.verticalLayout_3.addLayout(self.buttons_container)
 
@@ -472,5 +494,6 @@ class Ui_MainWindow(object):
         self.new_btn.setText(QCoreApplication.translate("MainWindow", u"\u041d\u043e\u0432\u0430\u044f \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044f", None))
         self.edit_btn.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
         self.delete_btn.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u044e", None))
+        self.import_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0432\u044b\u043f\u0438\u0441\u043a\u0443", None))
     # retranslateUi
 
