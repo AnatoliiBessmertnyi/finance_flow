@@ -1,37 +1,54 @@
 from datetime import datetime
-
+import re
 import pdfplumber
 
 
 class TinkoffPDFParser:
     @staticmethod
-    def parse(file_path: str) -> list[dict]:
-        operations = []
+    def parse(file_path: str):
         start_parsing = False
         with pdfplumber.open(file_path) as pdf:
             for page in pdf.pages:
                 text = page.extract_text()
 
                 for line in text.split('\n'):
-                    if 'Операции по карте' in line:
+                    print()
+                    print('LINE:', line)
+
+                    if 'операции в валюте счёта' in line:
                         start_parsing = True
+                        continue
+                    if 'Операции по карте' in line:
+                        start_parsing = False
+                        continue
                     if not start_parsing:
                         continue
 
-                    print('LINE:', line)
+                    date_match = re.match(
+                        r'^(?P<date>\d{2}\.\d{2}\.\d{2}(?: \d{2}:\d{2})?)', line
+                    )
 
-                    if "Дата и время операции:" in line:
-                        parts = line.split()
-                        date_str = parts[4]
-                        time_str = parts[5] if len(parts) > 5 else "00:00"
-                        description = " ".join(parts[6:-2])
-                        amount = parts[-1].replace(",", ".")
+                    if not date_match:
+                        continue
 
-                        operations.append({
-                            "date": datetime.strptime(
-                                f"{date_str} {time_str}", "%d.%m.%Y %H:%M"
-                            ),
-                            "description": description,
-                            "amount": float(amount)
-                        })
-        return operations
+                    date_str = date_match.group('date')
+                    remaining_line = line[date_match.end():].strip()
+                    cleaned_line = re.sub(
+                        r'^\d{2}\.\d{2}\.\d{2}', '', remaining_line
+                    ).strip()
+                    print('date_str', date_str)
+                    print('cleaned_line', cleaned_line)
+
+                    i_positions = [m.start() for m in re.finditer(r'i', cleaned_line)]
+                    last_i = i_positions[-1]
+                    prev_i = i_positions[-2]
+                    amount_part = cleaned_line[prev_i+1:last_i].strip()
+                    amount_cleaned = amount_part.replace(' ', '')
+                    amount_cleaned = amount_cleaned.replace(',', '.')
+                    if '+' not in amount_cleaned:
+                        amount_cleaned = '-' + amount_cleaned.lstrip('-')
+                    print(amount_cleaned)
+
+                    sum_start = cleaned_line.find(amount_part)
+                    description = cleaned_line[:sum_start].strip()
+                    print(description)
