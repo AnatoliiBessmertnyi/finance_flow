@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QHeaderView,
 
 
 class ImportPreviewDialog(QDialog):
-    operations_imported = Signal(list)  # Сигнал с данными для импорта
+    operations_imported = Signal(list)
 
     def __init__(self, operations, categories, parent=None):
         super().__init__(parent)
@@ -35,7 +35,7 @@ class ImportPreviewDialog(QDialog):
 
             self.table.setItem(row, 2, QTableWidgetItem(op['description']))
 
-            amount_item = QTableWidgetItem(str(op['amount']))
+            amount_item = QTableWidgetItem(str(op['balance']))
             amount_item.setTextAlignment(Qt.AlignRight)
             self.table.setItem(row, 3, amount_item)
 
@@ -56,7 +56,7 @@ class ImportPreviewDialog(QDialog):
                 operations_to_import.append({
                     'date': self.table.item(row, 1).text(),
                     'description': self.table.item(row, 2).text(),
-                    'amount': float(self.table.item(row, 3).text()),
+                    'balance': float(self.table.item(row, 3).text()),
                     'category': self.table.cellWidget(row, 4).currentText()
                 })
         self.operations_imported.emit(operations_to_import)

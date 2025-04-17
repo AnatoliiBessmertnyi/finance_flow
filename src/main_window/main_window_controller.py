@@ -249,7 +249,7 @@ class MainWindowController(QMainWindow):
                 date=op['date'],
                 category=op['category'],
                 description=op['description'],
-                amount=op['amount']
+                balance=op['balance']
             )
         self.load_operations()
         self.reload_data()
