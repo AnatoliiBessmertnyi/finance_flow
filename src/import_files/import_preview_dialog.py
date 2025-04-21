@@ -53,7 +53,7 @@ class ImportPreviewDialog(QDialog):
 
             category_combo = QComboBox()
             category_combo.addItems(self.categories)
-            auto_category = self.detect_category(op['description'])
+            auto_category = self.detect_category(op['description'], op['balance'])
             if auto_category:
                 index = category_combo.findText(auto_category)
             else:
@@ -69,13 +69,17 @@ class ImportPreviewDialog(QDialog):
         self.layout.addWidget(self.table)
         self.layout.addWidget(self.import_btn)
 
-    def detect_category(self, description: str) -> str | None:
-        """Автоматически определяет категорию по описанию операции"""
+    def detect_category(self, description: str, amount: float) -> str | None:
+        """Автоматически определяет категорию по описанию и сумме операции"""
         description_lower = description.lower()
+
+        if ('внутренний перевод' in description_lower
+                and amount == -250):
+            return 'Транспорт'
+
         for category, keywords in self.CATEGORY_RULES.items():
-            for keyword in keywords:
-                if keyword in description_lower:
-                    return category
+            if any(keyword in description_lower for keyword in keywords):
+                return category
 
     def prepare_import(self) -> None:
         operations_to_import = []
