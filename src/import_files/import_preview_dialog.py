@@ -7,6 +7,18 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QHeaderView,
 class ImportPreviewDialog(QDialog):
     operations_imported = Signal(list)
 
+    CATEGORY_RULES = {
+        'Еда': {
+            'кфс', 'макдоналдс', 'бургер кинг', 'кофе', 'kofe', 'coffee', 'doner',
+            'makovka'
+        },
+        'Транспорт': {
+            'такси', 'яндекс.Такси', 'убер', 'метро', 'автобус', 'тройка', 'strelkacard'
+        },
+        'Продукты': {'pyaterochka'},
+        'Здоровье': {'apteka', 'gorzdrav', 'aptechnoe'},
+    }
+
     def __init__(self, operations, categories, parent=None):
         super().__init__(parent)
         self.setWindowTitle('Проверка операций перед импортом')
@@ -41,6 +53,14 @@ class ImportPreviewDialog(QDialog):
 
             category_combo = QComboBox()
             category_combo.addItems(self.categories)
+            auto_category = self.detect_category(op['description'])
+            if auto_category:
+                index = category_combo.findText(auto_category)
+            else:
+                index = category_combo.findText('Другое')
+
+            if index >= 0:
+                category_combo.setCurrentIndex(index)
             self.table.setCellWidget(row, 4, category_combo)
 
         self.import_btn = QPushButton('Загрузить выбранные операции')
@@ -49,7 +69,15 @@ class ImportPreviewDialog(QDialog):
         self.layout.addWidget(self.table)
         self.layout.addWidget(self.import_btn)
 
-    def prepare_import(self):
+    def detect_category(self, description: str) -> str | None:
+        """Автоматически определяет категорию по описанию операции"""
+        description_lower = description.lower()
+        for category, keywords in self.CATEGORY_RULES.items():
+            for keyword in keywords:
+                if keyword in description_lower:
+                    return category
+
+    def prepare_import(self) -> None:
         operations_to_import = []
         for row in range(self.table.rowCount()):
             if self.table.cellWidget(row, 0).isChecked():
